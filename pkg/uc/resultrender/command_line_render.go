@@ -1,7 +1,6 @@
 package resultrender
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/AdharaProjects/compatibility-matrix-test-executor/pkg/uc/gotestrunner"
@@ -13,7 +12,7 @@ type CommandLineRender struct {
 }
 
 func (r CommandLineRender) Render(result []gotestrunner.SuiteExecutionResult) {
-	data := make([][]string, len(result))
+	data := make([][]string, 0)
 	//{
 	//	[]string{"1/1/2014", "Domain name", "1234", "$10.98"},
 	//	[]string{"1/1/2014", "January Hosting", "2345", "$54.95"},
@@ -21,13 +20,16 @@ func (r CommandLineRender) Render(result []gotestrunner.SuiteExecutionResult) {
 	//	[]string{"1/4/2014", "February Extra Bandwidth", "4567", "$30.00"},
 	//}
 
-	for index, currentResult := range result {
+	for _, currentResult := range result {
 		for _,currentTestExecutionResult := range currentResult.AllTestResults {
 			for _, currentVersionExecutionResult := range currentTestExecutionResult.VersionExecutionResults{
-				data[index] = []string{currentTestExecutionResult.Name, currentVersionExecutionResult.ID, fmt.Sprint(currentVersionExecutionResult.Result)}
+				resultStr := "Failure"
+				if currentVersionExecutionResult.Result == gotestrunner.TestSuccess {
+					resultStr = "Success"
+				}
+				data = append(data, []string{currentTestExecutionResult.Name, currentVersionExecutionResult.ID, resultStr})
 			}
 		}
-
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)

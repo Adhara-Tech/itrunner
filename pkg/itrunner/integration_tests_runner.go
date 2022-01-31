@@ -15,7 +15,7 @@ type DefaultIntegrationTestsRunner struct {
 func (runner *DefaultIntegrationTestsRunner) RunSuite() error {
 	// loop test groups
 	// -- current test group
-	// --- start dependencies
+	// --- start dependencies (if not already started)
 	// --- generate config
 	// --- execute
 	// end test groups
