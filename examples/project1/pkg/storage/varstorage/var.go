@@ -1,0 +1,5 @@
+package varstorage
+
+func DoVar() {
+
+}

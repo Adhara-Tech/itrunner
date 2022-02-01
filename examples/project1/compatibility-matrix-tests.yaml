@@ -1,0 +1,111 @@
+suite:
+  testGroups:
+    - groupName: postgres
+      packages:
+        - ./test/integration/db/...
+      versions:
+        - versionName: 14.1
+          env:
+            - CONFIG=./tmp-configs/databases/postgres_config.yml
+          dependsOn:
+            - containers:
+                - id: postgres_14.1
+          testConfig:
+            templatePath: ./config-templates/databases/postgres_config.tpl.yml
+            inputDataFrom:
+              containers:
+                - containerId: postgres_14.1
+                  templateVar: db
+              files:
+                - path: some_file.yaml
+
+              as: fileConfig
+            outputPath: ./tmp-configs/databases/postgres_config.yml
+        - versionName: 13.5
+          env:
+            - CONFIG=./tmp-configs/databases/postgres_config.yml
+          dependsOn:
+            - containers:
+                - id: postgres_13.5
+          testConfig:
+            templatePath: ./config-templates/databases/postgres_config.tpl.yml
+            inputDataFrom:
+              containers:
+                - containerId: postgres_13.5
+                  templateVar: db
+              files:
+                - path: some_file.yaml
+
+              as: fileConfig
+            outputPath: ./tmp-configs/databases/postgres_config.yml
+    - groupName: sqlserver
+      packages:
+        - ./test/integration/db/...
+      versions:
+        - versionName: 14.1
+          env:
+            - CONFIG=./tmp-configs/databases/postgres_config.yml
+          dependsOn:
+            - containers:
+                - id: postgres_14.1
+          testConfig:
+            templatePath: ./config-templates/databases/postgres_config.tpl.yml
+            inputDataFrom:
+              containers:
+                - containerId: postgres_14.1
+                  templateVar: db
+              files:
+                - path: some_file.yaml
+
+              as: fileConfig
+            outputPath: ./tmp-configs/databases/postgres_config.yml
+        - versionName: 13.5
+          env:
+            - CONFIG=./tmp-configs/databases/postgres_config.yml
+          dependsOn:
+            - containers:
+                - id: postgres_13.5
+          testConfig:
+            templatePath: ./config-templates/databases/postgres_config.tpl.yml
+            inputDataFrom:
+              containers:
+                - containerId: postgres_13.5
+                  templateVar: db
+              files:
+                - path: some_file.yaml
+
+              as: fileConfig
+            outputPath: ./tmp-configs/databases/postgres_config.yml
+  dependencies: # moved to 1st level (2 yamls)
+    containers: #Instance so it can be configured as a predeployed or container. For pre deployed the
+      - id: postgres_14.1
+        repository: postgres
+        tag: 14.1
+        env:
+          - "POSTGRES_PASSWORD=postgres"
+        ports:
+          - "5432:5432"
+      - id: postgres_13.5
+        repository: postgres
+        tag: 13.5
+        env:
+          - "POSTGRES_PASSWORD=postgres"
+        ports:
+          - "5433:5432"
+      - id: sqlserver_2019
+        repository: mcr.microsoft.com/mssql/server
+        tag: 2019-latest
+        env:
+          - "ACCEPT_EULA=Y"
+          - "SA_PASSWORD=admin"
+        ports:
+          - "1433:1433"
+      - id: sqlserver_2017
+        repository: mcr.microsoft.com/mssql/server
+        tag: 2017-latest
+        env:
+          - "ACCEPT_EULA=Y"
+          - "SA_PASSWORD=admin"
+        ports:
+          - "1434:1433"
+

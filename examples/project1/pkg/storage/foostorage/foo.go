@@ -1,0 +1,5 @@
+package foostorage
+
+func DoFoo() {
+
+}
