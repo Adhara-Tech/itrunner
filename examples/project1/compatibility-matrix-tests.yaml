@@ -42,34 +42,34 @@ suite:
       packages:
         - ./test/integration/db/...
       versions:
-        - versionName: 14.1
+        - versionName: 2019
           env:
             - CONFIG=./tmp-configs/databases/postgres_config.yml
           dependsOn:
             - containers:
-                - id: postgres_14.1
+                - id: sqlserver_2019
           testConfig:
             templatePath: ./config-templates/databases/postgres_config.tpl.yml
             inputDataFrom:
               containers:
-                - containerId: postgres_14.1
+                - containerId: sqlserver_2019
                   templateVar: db
               files:
                 - path: some_file.yaml
 
               as: fileConfig
             outputPath: ./tmp-configs/databases/postgres_config.yml
-        - versionName: 13.5
+        - versionName: 2017
           env:
             - CONFIG=./tmp-configs/databases/postgres_config.yml
           dependsOn:
             - containers:
-                - id: postgres_13.5
+                - id: sqlserver_2017
           testConfig:
             templatePath: ./config-templates/databases/postgres_config.tpl.yml
             inputDataFrom:
               containers:
-                - containerId: postgres_13.5
+                - containerId: sqlserver_2017
                   templateVar: db
               files:
                 - path: some_file.yaml
