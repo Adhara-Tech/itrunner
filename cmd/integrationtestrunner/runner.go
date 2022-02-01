@@ -72,32 +72,37 @@ func Run(opts RunnerOptions) error {
 
 	result, err := testRunner.RunTests(testSet)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
-	var render resultrender.Render
-	switch opts.OutputFormat {
-	case OutputFormatJson:
-		render = resultrender.JsonRender{}
-	case OutputFormatTable:
-		render = resultrender.CommandLineRender{}
-	default:
-		render = resultrender.CommandLineRender{}
-	}
+	render := newRender(opts.OutputFormat)
 
-	var writer io.Writer
+	// TODO extract to factory function?
+	var resultsWriter io.Writer
 	if opts.OutputFile != "" {
-		writer, err = os.Create(opts.OutputFile)
+		resultsWriter, err = os.Create(opts.OutputFile)
 		if err != nil {
 			return err
 		}
 	} else {
-		writer = os.Stdout
+		resultsWriter = os.Stdout
 	}
-	err = render.Render(*result, writer)
+
+	err = render.Render(*result, resultsWriter)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func newRender(format OutputFormat) resultrender.Render {
+	switch format {
+	case OutputFormatJson:
+		return resultrender.JsonRender{}
+	case OutputFormatTable:
+		return resultrender.CommandLineRender{}
+	default:
+		return resultrender.CommandLineRender{}
+	}
 }
