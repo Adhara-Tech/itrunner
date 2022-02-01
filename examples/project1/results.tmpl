@@ -17,7 +17,16 @@
   <td rowspan="{{ len $group.versions }}"><p>{{ $group.name }} </p></td>
   {{ end }}
   <td><p>{{ $version.version }}</p></td>
-  <td><p>{{ $version.result }}</p></td>
+  <td>
+    <p>
+    {{ if eq $version.result "FAILURE" }}
+	<ac:emoticon ac:name="cross" />
+    {{ else if eq $version.result "SUCCESS" }}
+	<ac:emoticon ac:name="tick" />
+    {{ end }}
+    {{ $version.result }}
+    </p>
+  </td>
 </tr>
 {{ end }}
 {{ end }}
