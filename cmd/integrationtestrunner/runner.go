@@ -3,16 +3,28 @@ package integrationtestrunner
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/AdharaProjects/compatibility-matrix-test-executor/pkg/uc/gotestrunner"
+	"io"
 	"io/ioutil"
+	"os"
+
+	"github.com/AdharaProjects/compatibility-matrix-test-executor/pkg/uc/gotestrunner"
 
 	"gopkg.in/yaml.v3"
 
 	"github.com/AdharaProjects/compatibility-matrix-test-executor/pkg/uc/resultrender"
 )
 
+type OutputFormat string
+
+const (
+	OutputFormatJson  OutputFormat = "json"
+	OutputFormatTable OutputFormat = "table"
+)
+
 type RunnerOptions struct {
 	CompatibilityMatrixConfigFilePath string
+	OutputFile                        string
+	OutputFormat                      OutputFormat
 }
 
 func Run(opts RunnerOptions) error {
@@ -40,9 +52,6 @@ func Run(opts RunnerOptions) error {
 	testSet := gotestrunner.Suite{}
 	testSet.AllTests = make([]gotestrunner.TestGroup, 0)
 
-
-
-
 	for _, testGroup := range config.Suite.TestGroupList {
 		currentTestGroup := gotestrunner.TestGroup{
 			Name:     testGroup.Name,
@@ -52,13 +61,8 @@ func Run(opts RunnerOptions) error {
 
 		for _, currentVersion := range testGroup.VersionList {
 			currentTestGroup.Versions = append(currentTestGroup.Versions, gotestrunner.Version{
-				ID:                    currentVersion.Name,
-				Env:                   currentVersion.EnvVarList,
-				//VersionDependencyList: currentVersion.,
-
-				//TestConfig:            gotestrunner.TestConfig{
-				//	TemplatePath:
-				//},
+				ID:  currentVersion.Name,
+				Env: currentVersion.EnvVarList,
 			})
 		}
 
@@ -66,49 +70,39 @@ func Run(opts RunnerOptions) error {
 
 	}
 
-	testSet.AllTests = append(testSet.AllTests, gotestrunner.TestGroup{
-		Name:     "Postgresql demo",
-		Packages: []string{"./test/integration/db/..."},
-		Versions: []gotestrunner.Version{
-			{
-				ID:  "10.9",
-				Env: []string{"CUSTOM_KEY=value"},
-			},
-			{
-				ID:  "10.10",
-				Env: []string{"CUSTOM_KEY=value"},
-			},
-			{
-				ID:  "10.11",
-				Env: []string{"CUSTOM_KEY=value"},
-			},
-		},
-	})
-	testSet.AllTests = append(testSet.AllTests, gotestrunner.TestGroup{
-		Name:     "Rabbit demo",
-		Packages: []string{"./test/integration/db/..."},
-		Versions: []gotestrunner.Version{
-			{
-				ID:  "1.4",
-				Env: []string{"CUSTOM_KEY=value"},
-			},
-			{
-				ID:  "2.4",
-				Env: []string{"CUSTOM_KEY=value"},
-			},
-			{
-				ID:  "3.7",
-				Env: []string{"CUSTOM_KEY=value"},
-			},
-		},
-	})
 	result, err := testRunner.RunTests(testSet)
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
-	render := resultrender.CommandLineRender{}
-	render.Render([]gotestrunner.SuiteExecutionResult{*result})
+	render := newRender(opts.OutputFormat)
+
+	// TODO extract to factory function?
+	var resultsWriter io.Writer
+	if opts.OutputFile != "" {
+		resultsWriter, err = os.Create(opts.OutputFile)
+		if err != nil {
+			return err
+		}
+	} else {
+		resultsWriter = os.Stdout
+	}
+
+	err = render.Render(*result, resultsWriter)
+	if err != nil {
+		return err
+	}
 
 	return nil
+}
+
+func newRender(format OutputFormat) resultrender.Render {
+	switch format {
+	case OutputFormatJson:
+		return resultrender.JsonRender{}
+	case OutputFormatTable:
+		return resultrender.CommandLineRender{}
+	default:
+		return resultrender.CommandLineRender{}
+	}
 }

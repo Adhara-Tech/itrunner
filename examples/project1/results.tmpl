@@ -1,0 +1,27 @@
+<table data-layout="default" ac:local-id="ce5e7ea3-4969-407a-9239-66f9d74e6d6b"><colgroup><col style="width: 226.67px;" /><col style="width: 226.67px;" /><col style="width: 226.67px;" /></colgroup>
+<tbody>
+<tr>
+<th>
+<p><strong>Group</strong></p></th>
+<th>
+<p><strong>Version</strong></p></th>
+<th>
+<p><strong>Result</strong></p></th></tr>
+
+{{ range $groupCounter, $group := (datasource "results").suite.groups}}
+
+{{ range $versionCounter, $version := $group.versions}}
+<tr>
+  <!--only in first row-->
+  {{ if eq $versionCounter 0 }}
+  <td rowspan="{{ len $group.versions }}"><p>{{ $group.name }} </p></td>
+  {{ end }}
+  <td><p>{{ $version.version }}</p></td>
+  <td><p>{{ $version.result }}</p></td>
+</tr>
+{{ end }}
+{{ end }}
+
+</tbody></table>
+<p />
+

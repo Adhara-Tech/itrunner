@@ -1,5 +1,7 @@
 package gotestrunner
 
+import "encoding/json"
+
 type TestResult int
 
 const (
@@ -12,17 +14,17 @@ type Suite struct {
 }
 
 type SuiteExecutionResult struct {
-	AllTestResults []TestGroupExecutionResult
+	AllTestResults []TestGroupExecutionResult `json:"groups"`
 }
 
 type TestGroupExecutionResult struct {
-	Name                    string
-	VersionExecutionResults []VersionExecutionResult
+	Name                    string                   `json:"name"`
+	VersionExecutionResults []VersionExecutionResult `json:"versions"`
 }
 
 type VersionExecutionResult struct {
-	ID     string
-	Result TestResult
+	ID     string     `json:"version"`
+	Result TestResult `json:"result"`
 }
 
 type TestGroup struct {
@@ -36,4 +38,15 @@ type Version struct {
 	Env []string
 	//VersionDependencyList []ContainerReference
 	//TestConfig            TestConfig
+}
+
+func (testResult TestResult) MarshalJSON() ([]byte, error) {
+	switch testResult {
+	case TestSuccess:
+		return json.Marshal("SUCCESS")
+	case TestFailure:
+		return json.Marshal("FAILURE")
+	default:
+		return json.Marshal("UNKNOWN")
+	}
 }
