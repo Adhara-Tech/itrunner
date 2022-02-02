@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"io"
 
-	"github.com/AdharaProjects/compatibility-matrix-test-executor/pkg/uc/gotestrunner"
+	"github.com/Adhara-Tech/itrunner/pkg/uc/gotestrunner"
 )
 
 type JsonRender struct {

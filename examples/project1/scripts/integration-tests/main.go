@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/AdharaProjects/compatibility-matrix-test-executor/cmd/integrationtestrunner"
-	//"github.com/AdharaProjects/compatibility-matrix-test-executor/cmd/runner"
+	"github.com/Adhara-Tech/itrunner/cmd/integrationtestrunner"
+	//"github.com/Adhara-Tech/itrunner/cmd/runner"
 )
 
 func main() {

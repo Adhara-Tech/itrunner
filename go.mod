@@ -1,4 +1,4 @@
-module github.com/AdharaProjects/compatibility-matrix-test-executor
+module github.com/Adhara-Tech/itrunner
 
 go 1.16
 

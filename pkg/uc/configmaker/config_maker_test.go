@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/AdharaProjects/compatibility-matrix-test-executor/pkg/uc/configmaker"
+	"github.com/Adhara-Tech/itrunner/pkg/uc/configmaker"
 )
 
 var configRenderResult = `containers:

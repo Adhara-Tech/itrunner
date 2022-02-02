@@ -7,11 +7,11 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/AdharaProjects/compatibility-matrix-test-executor/pkg/uc/gotestrunner"
+	"github.com/Adhara-Tech/itrunner/pkg/uc/gotestrunner"
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/AdharaProjects/compatibility-matrix-test-executor/pkg/uc/resultrender"
+	"github.com/Adhara-Tech/itrunner/pkg/uc/resultrender"
 )
 
 type OutputFormat string
