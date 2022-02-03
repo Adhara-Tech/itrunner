@@ -1,12 +1,10 @@
 package containertesthelper
 
 import (
+	"fmt"
 	"log"
+	"path/filepath"
 	"strconv"
-
-	"shared.mod/go-commons/pkg/testhelpers/testconfig"
-
-	"shared.mod/go-commons/pkg/exerrors"
 
 	"github.com/ory/dockertest"
 )
@@ -68,7 +66,12 @@ func (container *Container) Purge() error {
 
 func (config *ContainerRunConfig) buildAbsoluteMountPath() {
 	for i, relativePath := range config.Mounts {
-		config.Mounts[i] = testconfig.BuildAbsolutePathFromTestConfigPath(relativePath)
+		absPath, err := filepath.Abs(relativePath)
+		// TODO: better way to handle this error
+		if err != nil {
+			panic(err)
+		}
+		config.Mounts[i] = absPath
 	}
 }
 
@@ -92,7 +95,7 @@ func (containersPool *ContainersPool) Run(config ContainerRunConfig, dockerInDoc
 
 	resource, err := containersPool.pool.RunWithOptions(runOptions)
 	if err != nil {
-		return nil, exerrors.WrapUnknownWithMsg(err, "Running container with options")
+		return nil, fmt.Errorf("Running container with options: %w", err)
 	}
 
 	container := &Container{
@@ -106,7 +109,7 @@ func (containersPool *ContainersPool) Run(config ContainerRunConfig, dockerInDoc
 	})
 
 	if err != nil {
-		return nil, exerrors.WrapUnknownWithMsg(err, "Waiting container to be ready")
+		return nil, fmt.Errorf("Waiting container to be ready: %w", err)
 	}
 
 	return container, nil
