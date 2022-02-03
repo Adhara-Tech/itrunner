@@ -10,7 +10,8 @@ const (
 )
 
 type Suite struct {
-	AllTests []TestGroup
+	AllTests     []TestGroup
+	Dependencies DependenciesList
 }
 
 type SuiteExecutionResult struct {
@@ -20,6 +21,10 @@ type SuiteExecutionResult struct {
 type TestGroupExecutionResult struct {
 	Name                    string                   `json:"name"`
 	VersionExecutionResults []VersionExecutionResult `json:"versions"`
+}
+
+type TestDependency struct {
+	ID string
 }
 
 type VersionExecutionResult struct {
@@ -34,10 +39,23 @@ type TestGroup struct {
 }
 
 type Version struct {
-	ID  string //Ex:1.9
-	Env []string
+	ID        string //Ex:1.9
+	Env       []string
+	DependsOn []TestDependency
 	//VersionDependencyList []ContainerReference
 	//TestConfig            TestConfig
+}
+
+type DependenciesList struct {
+	Containers []ContainerSpec
+}
+
+type ContainerSpec struct {
+	ID         string
+	Repository string
+	Tag        string
+	Env        []string
+	Ports      []string
 }
 
 func (testResult TestResult) MarshalJSON() ([]byte, error) {

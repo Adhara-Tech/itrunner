@@ -1,5 +1,11 @@
 package gotestrunner
 
+import (
+	"fmt"
+
+	"github.com/AdharaProjects/compatibility-matrix-test-executor/pkg/containertesthelper"
+)
+
 type TestRunner interface {
 	RunTests(set Suite) (*SuiteExecutionResult, error)
 }
@@ -7,6 +13,17 @@ type TestRunner interface {
 var _ TestRunner = (*DefaultTestRunner)(nil)
 
 type DefaultTestRunner struct {
+	infraProvider InfraProvider
+}
+
+type InfraProvider interface {
+	SpinUpContainer(id string) (*containertesthelper.Container, error)
+}
+
+func NewTestRunner(infraProvider InfraProvider) DefaultTestRunner {
+	return DefaultTestRunner{
+		infraProvider: infraProvider,
+	}
 }
 
 func (d DefaultTestRunner) RunTests(testSet Suite) (*SuiteExecutionResult, error) {
@@ -34,6 +51,18 @@ func (d DefaultTestRunner) doExecuteTestGroup(group TestGroup) (*TestGroupExecut
 	args = append(args, group.Packages...)
 	for _, version := range group.Versions {
 
+		fmt.Println("starting version " + version.ID)
+		// request infra:
+		var containers []*containertesthelper.Container = make([]*containertesthelper.Container, 0)
+		for _, dependency := range version.DependsOn {
+			fmt.Println("starting container " + dependency.ID)
+			container, err := d.infraProvider.SpinUpContainer(dependency.ID)
+			if err != nil {
+				return nil, err
+			}
+			containers = append(containers, container)
+		}
+
 		exitCode, err := Command("go", version.Env, args...).ExecuteWithLog()
 		testResult := TestSuccess
 		if err != nil {
@@ -44,6 +73,13 @@ func (d DefaultTestRunner) doExecuteTestGroup(group TestGroup) (*TestGroupExecut
 			}
 		}
 
+		// shutdown infra
+		for _, container := range containers {
+			if err = container.Purge(); err != nil {
+				return nil, err
+			}
+		}
+
 		results = append(results, VersionExecutionResult{
 			ID:     version.ID,
 			Result: testResult,
@@ -51,7 +87,7 @@ func (d DefaultTestRunner) doExecuteTestGroup(group TestGroup) (*TestGroupExecut
 	}
 
 	return &TestGroupExecutionResult{
-		Name: group.Name,
+		Name:                    group.Name,
 		VersionExecutionResults: results,
 	}, nil
 }
