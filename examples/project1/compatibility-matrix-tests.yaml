@@ -8,8 +8,7 @@ suite:
           env:
             - CONFIG=./tmp-configs/databases/postgres_config.yml
           dependsOn:
-            - containers:
-                - id: postgres_14.1
+            - id: postgres_14.1
           testConfig:
             templatePath: ./config-templates/databases/postgres_config.tpl.yml
             inputDataFrom:
@@ -25,8 +24,7 @@ suite:
           env:
             - CONFIG=./tmp-configs/databases/postgres_config.yml
           dependsOn:
-            - containers:
-                - id: postgres_13.5
+            - id: postgres_13.5
           testConfig:
             templatePath: ./config-templates/databases/postgres_config.tpl.yml
             inputDataFrom:
@@ -46,8 +44,7 @@ suite:
           env:
             - CONFIG=./tmp-configs/databases/postgres_config.yml
           dependsOn:
-            - containers:
-                - id: sqlserver_2019
+            - id: sqlserver_2019
           testConfig:
             templatePath: ./config-templates/databases/postgres_config.tpl.yml
             inputDataFrom:
@@ -63,8 +60,7 @@ suite:
           env:
             - CONFIG=./tmp-configs/databases/postgres_config.yml
           dependsOn:
-            - containers:
-                - id: sqlserver_2017
+            - id: sqlserver_2017
           testConfig:
             templatePath: ./config-templates/databases/postgres_config.tpl.yml
             inputDataFrom:

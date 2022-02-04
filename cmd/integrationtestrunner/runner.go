@@ -48,7 +48,20 @@ func Run(opts RunnerOptions) error {
 
 	fmt.Println(string(dataBytes))
 
-	testRunner := gotestrunner.DefaultTestRunner{}
+	var dependencieslist gotestrunner.DependenciesList
+	for _, dependency := range config.Suite.Dependencies.Containers {
+		container := gotestrunner.ContainerSpec{
+			ID:         dependency.ID,
+			Repository: dependency.Repository,
+			Tag:        dependency.Tag,
+			Env:        dependency.Env,
+		}
+		dependencieslist.Containers = append(dependencieslist.Containers, container)
+
+	}
+
+	infraProvider := gotestrunner.NewInfraProvider(dependencieslist)
+	testRunner := gotestrunner.NewTestRunner(infraProvider)
 	testSet := gotestrunner.Suite{}
 	testSet.AllTests = make([]gotestrunner.TestGroup, 0)
 
@@ -60,10 +73,18 @@ func Run(opts RunnerOptions) error {
 		}
 
 		for _, currentVersion := range testGroup.VersionList {
-			currentTestGroup.Versions = append(currentTestGroup.Versions, gotestrunner.Version{
+			version := gotestrunner.Version{
 				ID:  currentVersion.Name,
 				Env: currentVersion.EnvVarList,
-			})
+			}
+
+			for _, dependency := range currentVersion.DependsOn {
+				version.DependsOn = append(version.DependsOn, gotestrunner.TestDependency{
+					ID: dependency.ID,
+				})
+
+			}
+			currentTestGroup.Versions = append(currentTestGroup.Versions, version)
 		}
 
 		testSet.AllTests = append(testSet.AllTests, currentTestGroup)

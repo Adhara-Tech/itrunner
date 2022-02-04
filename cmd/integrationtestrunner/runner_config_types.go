@@ -5,7 +5,8 @@ type CompatibilityMatrixTestConfig struct {
 }
 
 type Suite struct {
-	TestGroupList []TestGroup `yaml:"testGroups"`
+	TestGroupList []TestGroup      `yaml:"testGroups"`
+	Dependencies  DependenciesList `yaml:"dependencies"`
 }
 
 type TestGroup struct {
@@ -15,9 +16,14 @@ type TestGroup struct {
 }
 
 type TestVersion struct {
-	Name       string     `yaml:"versionName"`
-	EnvVarList []string   `yaml:"env"`
-	TestConfig TestConfig `yaml:"testConfig"`
+	Name       string           `yaml:"versionName"`
+	EnvVarList []string         `yaml:"env"`
+	TestConfig TestConfig       `yaml:"testConfig"`
+	DependsOn  []TestDependency `yaml:"dependsOn"`
+}
+
+type TestDependency struct {
+	ID string
 }
 
 type TestConfig struct {
@@ -35,31 +41,14 @@ type ContainerTestConfig struct {
 	TemplateVar string `yaml:"templateVar"`
 }
 
-/*
-suite:
-  - groupName: postgres
-    packages:
-      - ./test/integration/db/...
-    versions:
-      - versionName: 10.9
-        env:
-          - CONFIG=./tmp-configs/databases/postgres_config.yml
-        dependsOn:
-          - containers:
-              - id: postgres_10.9
-              #- id: prometheus
-        testConfig:
-          templatePath: ./config-templates/databases/postgres_config.tpl.yml
-          input:
-            containers:
-              - containerId: postgres_10.9
-                templateVar: db
-            files:
-              - path: some_file.yaml
+type DependenciesList struct {
+	Containers []ContainerSpec `yaml:"containers"`
+}
 
-            as: fileConfig
-          output: ./tmp-configs/databases/postgres_config.yml
-      - version: 10.11
-        env:
-          config: path_to_config
-*/
+type ContainerSpec struct {
+	ID         string   `yaml:"id"`
+	Repository string   `yaml:"repository"`
+	Tag        string   `yaml:"tag"`
+	Env        []string `yaml:"env"`
+	Ports      []string `yaml:"ports"`
+}
