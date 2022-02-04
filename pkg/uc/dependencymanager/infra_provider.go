@@ -1,18 +1,19 @@
-package gotestrunner
+package dependencymanager
 
 import (
-	"github.com/AdharaProjects/compatibility-matrix-test-executor/pkg/containertesthelper"
+	"github.com/Adhara-Tech/itrunner/pkg/containertesthelper"
+	"github.com/Adhara-Tech/itrunner/pkg/uc/gotestrunner"
 	"github.com/pkg/errors"
 )
 
-var _ InfraProvider = (*DefaultInfraProvider)(nil)
+var _ gotestrunner.InfraProvider = (*DefaultInfraProvider)(nil)
 
 type DefaultInfraProvider struct {
-	Dependencies   DependenciesList
+	Dependencies   gotestrunner.DependenciesList
 	containersPool containertesthelper.ContainersPool
 }
 
-func NewInfraProvider(deps DependenciesList) *DefaultInfraProvider {
+func NewInfraProvider(deps gotestrunner.DependenciesList) *DefaultInfraProvider {
 	return &DefaultInfraProvider{
 		Dependencies:   deps,
 		containersPool: *containertesthelper.InitContainerPool(),
@@ -37,7 +38,7 @@ func (d *DefaultInfraProvider) SpinUpContainer(id string) (*containertesthelper.
 	return container, err
 }
 
-func (infraProvider DefaultInfraProvider) findContainerSpec(id string) *ContainerSpec {
+func (infraProvider DefaultInfraProvider) findContainerSpec(id string) *gotestrunner.ContainerSpec {
 	for _, container := range infraProvider.Dependencies.Containers {
 		if container.ID == id {
 			return &container

@@ -3,6 +3,7 @@ package integrationtestrunner
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/Adhara-Tech/itrunner/pkg/uc/dependencymanager"
 	"io"
 	"io/ioutil"
 	"os"
@@ -60,7 +61,7 @@ func Run(opts RunnerOptions) error {
 
 	}
 
-	infraProvider := gotestrunner.NewInfraProvider(dependencieslist)
+	infraProvider := dependencymanager.NewInfraProvider(dependencieslist)
 	testRunner := gotestrunner.NewTestRunner(infraProvider)
 	testSet := gotestrunner.Suite{}
 	testSet.AllTests = make([]gotestrunner.TestGroup, 0)

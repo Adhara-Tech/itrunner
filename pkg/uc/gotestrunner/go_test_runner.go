@@ -3,7 +3,7 @@ package gotestrunner
 import (
 	"fmt"
 
-	"github.com/AdharaProjects/compatibility-matrix-test-executor/pkg/containertesthelper"
+	"github.com/Adhara-Tech/itrunner/pkg/containertesthelper"
 )
 
 type TestRunner interface {
