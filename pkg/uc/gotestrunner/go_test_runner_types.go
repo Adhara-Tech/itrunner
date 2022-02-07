@@ -1,6 +1,9 @@
 package gotestrunner
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"github.com/Adhara-Tech/itrunner/cmd/exportedtypes"
+)
 
 type TestResult int
 
@@ -9,26 +12,14 @@ const (
 	TestFailure
 )
 
-type TestConfigFormat string
-
-const (
-	TestConfigFormatJson TestConfigFormat = "JSON"
-	TestConfigFormatYaml TestConfigFormat = "YAML"
-)
-
 type GoTest struct {
 	Packages          []string
-	EnvConfigFormat   TestConfigFormat
+	EnvConfigFormat   exportedtypes.TestConfigFormat
 	EnvConfigFilePath string
 }
 
 type GoTestResult struct {
 	Result TestResult
-}
-
-type testExecutionData struct {
-	EnvConfigFormat TestConfigFormat
-	EnvData         string
 }
 
 //

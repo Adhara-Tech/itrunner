@@ -3,7 +3,9 @@ package gotestrunner
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/Adhara-Tech/itrunner/cmd/exportedtypes"
 	"github.com/Adhara-Tech/itrunner/pkg/uc/dependencymanager"
+	"io/ioutil"
 )
 
 type TestRunner interface {
@@ -19,9 +21,14 @@ type DefaultTestRunner struct {
 
 func (d DefaultTestRunner) RunTest(test GoTest) (*GoTestResult, error) {
 
-	testEnvData := testExecutionData{
-		EnvConfigFormat: "",
-		EnvData:         "",
+	fileData, err := ioutil.ReadFile(test.EnvConfigFilePath)
+	if err != nil {
+		return nil, err
+	}
+
+	testEnvData := exportedtypes.TestEnvExecutionData{
+		EnvConfigFormat: test.EnvConfigFormat,
+		EnvData:         string(fileData),
 	}
 
 	envData, err := json.Marshal(testEnvData)
