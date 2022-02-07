@@ -23,9 +23,10 @@ const (
 )
 
 type RunnerOptions struct {
-	CompatibilityMatrixConfigFilePath string
-	OutputFile                        string
-	OutputFormat                      OutputFormat
+	CompatibilityMatrixConfigFilePath       string
+	CompatibilityMatrixDependenciesFilePath string
+	OutputFile                              string
+	OutputFormat                            OutputFormat
 }
 
 func Run(opts RunnerOptions) error {
