@@ -39,7 +39,6 @@ func executeCommand(c command, logs bool) (int, error) {
 
 	cmd := exec.Command(c.Name, c.Args...)
 	cmd.Env = os.Environ()
-	cmd.Env = append(cmd.Env, "TEST_RUNNER_CONF_DEFAULT="+`{ "db": {   "databasetype": "postgresql",   "host": "localhost",   "port": 5432,   "database": "postgres",   "username": "postgres",   "password": "postgres",   "sslmode": "disable",   "scheme": "postgres",   "dynamic_port_name": "5432/tcp" }, "db_schema":{"path":"/schemas/postgres/test_schema.sql"} }`)
 	cmd.Env = append(cmd.Env, c.Env...)
 
 	stdOutPipe, err := cmd.StdoutPipe()

@@ -1,93 +1,59 @@
 package gotestrunner
 
 import (
+	"encoding/json"
 	"fmt"
-
-	"github.com/Adhara-Tech/itrunner/pkg/containertesthelper"
+	"github.com/Adhara-Tech/itrunner/pkg/uc/dependencymanager"
 )
 
 type TestRunner interface {
-	RunTests(set Suite) (*SuiteExecutionResult, error)
+	RunTest(test GoTest) (*GoTestResult, error)
 }
 
 var _ TestRunner = (*DefaultTestRunner)(nil)
 
+const testRunnerConfEnvVarName = "ITEST_RUNNER_CONF_DEFAULT"
+
 type DefaultTestRunner struct {
-	infraProvider InfraProvider
 }
 
-type InfraProvider interface {
-	SpinUpContainer(id string) (*containertesthelper.Container, error)
-}
+func (d DefaultTestRunner) RunTest(test GoTest) (*GoTestResult, error) {
 
-func NewTestRunner(infraProvider InfraProvider) DefaultTestRunner {
-	return DefaultTestRunner{
-		infraProvider: infraProvider,
-	}
-}
-
-func (d DefaultTestRunner) RunTests(testSet Suite) (*SuiteExecutionResult, error) {
-
-	allResults := make([]TestGroupExecutionResult, 0)
-
-	for _, testDefinition := range testSet.AllTests {
-		testGroupExecutionResult, err := d.doExecuteTestGroup(testDefinition)
-		if err != nil {
-			return nil, err
-		}
-		allResults = append(allResults, *testGroupExecutionResult)
+	testEnvData := testExecutionData{
+		EnvConfigFormat: "",
+		EnvData:         "",
 	}
 
-	return &SuiteExecutionResult{AllTestResults: allResults}, nil
-}
+	envData, err := json.Marshal(testEnvData)
+	if err != nil {
+		return nil, err
+	}
 
-func (d DefaultTestRunner) doExecuteTestGroup(group TestGroup) (*TestGroupExecutionResult, error) {
-
-	results := make([]VersionExecutionResult, 0)
+	envVar := fmt.Sprintf("%s=%s", testRunnerConfEnvVarName, string(envData))
 
 	args := make([]string, 0)
 	// TODO gotestsum must be an option
 	args = append(args, "test")
-	args = append(args, group.Packages...)
-	for _, version := range group.Versions {
-
-		fmt.Println("starting version " + version.ID)
-		// request infra:
-		var containers []*containertesthelper.Container = make([]*containertesthelper.Container, 0)
-		for _, dependency := range version.DependsOn {
-			fmt.Println("starting container " + dependency.ID)
-			container, err := d.infraProvider.SpinUpContainer(dependency.ID)
-			if err != nil {
-				return nil, err
-			}
-			containers = append(containers, container)
+	args = append(args, test.Packages...)
+	exitCode, err := Command("go", []string{envVar}, args...).ExecuteWithLog()
+	testResult := TestSuccess
+	if err != nil {
+		return nil, err
+	} else {
+		if exitCode != 0 {
+			testResult = TestFailure
 		}
-
-		exitCode, err := Command("go", version.Env, args...).ExecuteWithLog()
-		testResult := TestSuccess
-		if err != nil {
-			return nil, err
-		} else {
-			if exitCode != 0 {
-				testResult = TestFailure
-			}
-		}
-
-		// shutdown infra
-		for _, container := range containers {
-			if err = container.Purge(); err != nil {
-				return nil, err
-			}
-		}
-
-		results = append(results, VersionExecutionResult{
-			ID:     version.ID,
-			Result: testResult,
-		})
 	}
 
-	return &TestGroupExecutionResult{
-		Name:                    group.Name,
-		VersionExecutionResults: results,
+	return &GoTestResult{
+		Result: testResult,
 	}, nil
+}
+
+type InfraProvider interface {
+	SpinUpContainer(id string) (*dependencymanager.Container, error)
+}
+
+func NewDefaultTestRunner() DefaultTestRunner {
+	return DefaultTestRunner{}
 }

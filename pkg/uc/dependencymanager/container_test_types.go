@@ -1,4 +1,4 @@
-package containertesthelper
+package dependencymanager
 
 import "github.com/ory/dockertest/docker"
 

@@ -1,4 +1,4 @@
-package containertesthelper
+package dependencymanager
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"github.com/ory/dockertest"
 )
 
-var TestConfigPath string
+//var TestConfigPath string
 
 type ContainersPool struct {
 	pool *dockertest.Pool
