@@ -7,3 +7,13 @@ NOTE: a component must be created in jira and all these elements must be moved t
 * Redefine test executable (support for gotestsum)
 * Labeling to discriminate tests to be executed
 * Redefine env variable used to inject data to tests 
+
+Support to inject several variables
+```
+  testVars:
+    - name: configPath
+      value: ./tmp-configs/databases/postgres_config.yml
+    - name: configValue
+      type: [raw,yaml,json]
+      fromFile: ./tmp-configs/databases/postgres_config.yml #reads the file
+```

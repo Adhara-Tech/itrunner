@@ -16,6 +16,7 @@ type GoTest struct {
 	Packages          []string
 	EnvConfigFormat   exportedtypes.TestConfigFormat
 	EnvConfigFilePath string
+	EnvVarName        string
 }
 
 type GoTestResult struct {

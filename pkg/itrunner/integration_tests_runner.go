@@ -50,16 +50,17 @@ func (d DefaultIntegrationTestsRunner) doExecuteTestGroup(group TestGroup) (*Tes
 		// Obtain info about dependencies. Dependency manager starts services when possible or retrieve the info
 		// to access the dependency
 		configOptions := configmaker.GenerateConfigOptions{
-			Name:         "", //TODO map
-			TemplatePath: "", //TODO map
+			OutputPath:   version.TestConfig.OutputPath,
+			TemplatePath: version.TestConfig.TemplatePath,
 			TemplateData: make(map[string]interface{}),
 		}
-		for _, dependency := range version.DependsOn {
+
+		for _, dependency := range version.TestConfig.InputDataFrom.Dependencies {
 			depInfo, err := d.dependencyManager.GetDependencyInfo(dependency.ID)
 			if err != nil {
 				return nil, err
 			}
-			configOptions.TemplateData[dependency.ID] = depInfo
+			configOptions.TemplateData[dependency.TemplateVar] = depInfo
 		}
 
 		//Generate configuration

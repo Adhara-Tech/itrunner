@@ -25,7 +25,7 @@ func TestGenerateConfig(t *testing.T) {
 	}
 
 	opts := configmaker.GenerateConfigOptions{
-		Name:         "example-template",
+		OutputPath:   "example-template",
 		TemplatePath: "testdata/example.tpl.yaml",
 		TemplateData: data,
 	}

@@ -43,7 +43,22 @@ type Version struct {
 	Env       []string
 	DependsOn []TestDependency
 	//VersionDependencyList []ContainerReference
-	//TestConfig            TestConfig
+	TestConfig VersionTestConfig
+}
+
+type VersionTestConfig struct {
+	TemplatePath  string              `yaml:"templatePath"`
+	InputDataFrom ConfigInputDataFrom `yaml:"inputDataFrom"`
+	OutputPath    string              `yaml:"outputPath"`
+}
+
+type ConfigInputDataFrom struct {
+	Dependencies []ConfigInputDataFromDependency `yaml:"dependencies"`
+}
+
+type ConfigInputDataFromDependency struct {
+	ID          string `yaml:"id"`
+	TemplateVar string `yaml:"templateVar"`
 }
 
 type DependenciesList struct {

@@ -6,7 +6,7 @@ import (
 )
 
 type GenerateConfigOptions struct {
-	Name         string
+	OutputPath   string
 	TemplatePath string
 	TemplateData map[string]interface{}
 }
@@ -27,7 +27,7 @@ func GenerateConfig(opts GenerateConfigOptions) (*GenerateConfigOutput, error) {
 		return nil, err
 	}
 
-	outputFile, err := ioutil.TempFile("", opts.Name)
+	outputFile, err := ioutil.TempFile("", opts.OutputPath)
 	if err != nil {
 		return nil, err
 	}

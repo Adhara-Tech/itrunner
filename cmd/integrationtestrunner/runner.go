@@ -93,6 +93,18 @@ func Run(opts RunnerOptions) error {
 				})
 
 			}
+			version.TestConfig = itrunner.VersionTestConfig{
+				TemplatePath:  currentVersion.TestConfig.TemplatePath,
+				OutputPath:    currentVersion.TestConfig.OutputPath,
+				InputDataFrom: itrunner.ConfigInputDataFrom{Dependencies: make([]itrunner.ConfigInputDataFromDependency, 0, 0)},
+			}
+
+			for _, currentDependency := range currentVersion.TestConfig.InputDataFrom.ContainerTestConfigList {
+				version.TestConfig.InputDataFrom.Dependencies = append(version.TestConfig.InputDataFrom.Dependencies, itrunner.ConfigInputDataFromDependency{
+					ID:          currentDependency.ContainerID,
+					TemplateVar: currentDependency.TemplateVar,
+				})
+			}
 			currentTestGroup.Versions = append(currentTestGroup.Versions, version)
 		}
 

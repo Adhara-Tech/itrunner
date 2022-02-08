@@ -1,6 +1,7 @@
 package gotestrunner
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/Adhara-Tech/itrunner/cmd/exportedtypes"
@@ -13,8 +14,6 @@ type TestRunner interface {
 }
 
 var _ TestRunner = (*DefaultTestRunner)(nil)
-
-const testRunnerConfEnvVarName = "ITEST_RUNNER_CONF_DEFAULT"
 
 type DefaultTestRunner struct {
 }
@@ -36,7 +35,8 @@ func (d DefaultTestRunner) RunTest(test GoTest) (*GoTestResult, error) {
 		return nil, err
 	}
 
-	envVar := fmt.Sprintf("%s=%s", testRunnerConfEnvVarName, string(envData))
+	base64EnvData := base64.StdEncoding.EncodeToString(envData)
+	envVar := fmt.Sprintf("%s=%s", exportedtypes.TestRunnerConfEnvVarName, base64EnvData)
 
 	args := make([]string, 0)
 	// TODO gotestsum must be an option

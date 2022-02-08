@@ -33,7 +33,7 @@ type TestConfig struct {
 }
 
 type TestConfigInputDataFrom struct {
-	ContainerTestConfigList []ContainerTestConfig `yaml:"containers"`
+	ContainerTestConfigList []ContainerTestConfig `yaml:"dependencies"`
 }
 
 type ContainerTestConfig struct {
