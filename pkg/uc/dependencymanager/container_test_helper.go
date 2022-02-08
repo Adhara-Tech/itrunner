@@ -21,6 +21,14 @@ type Container struct {
 	isDockerInDocker bool
 }
 
+func (container *Container) GetPortNames() []string {
+	result := make([]string, 0)
+	for portName := range container.resource.Container.NetworkSettings.Ports {
+		result = append(result, string(portName))
+	}
+	return result
+}
+
 func (container *Container) GetPort(portName string) string {
 	return container.resource.GetPort(portName)
 }

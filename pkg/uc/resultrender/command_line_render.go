@@ -3,7 +3,7 @@ package resultrender
 import (
 	"io"
 
-	"github.com/Adhara-Tech/itrunner/pkg/uc/gotestrunner"
+	"github.com/Adhara-Tech/itrunner/pkg/itrunner"
 
 	"github.com/olekukonko/tablewriter"
 )
@@ -11,7 +11,7 @@ import (
 type CommandLineRender struct {
 }
 
-func (r CommandLineRender) Render(result gotestrunner.SuiteExecutionResult, writer io.Writer) error {
+func (r CommandLineRender) Render(result itrunner.SuiteExecutionResult, writer io.Writer) error {
 	data := make([][]string, 0)
 	//{
 	//	[]string{"1/1/2014", "Domain name", "1234", "$10.98"},
@@ -23,7 +23,7 @@ func (r CommandLineRender) Render(result gotestrunner.SuiteExecutionResult, writ
 	for _, currentTestExecutionResult := range result.AllTestResults {
 		for _, currentVersionExecutionResult := range currentTestExecutionResult.VersionExecutionResults {
 			resultStr := "Failure"
-			if currentVersionExecutionResult.Result == gotestrunner.TestSuccess {
+			if currentVersionExecutionResult.Result == itrunner.TestSuccess {
 				resultStr = "Success"
 			}
 			data = append(data, []string{currentTestExecutionResult.Name, currentVersionExecutionResult.ID, resultStr})

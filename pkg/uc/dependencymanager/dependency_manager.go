@@ -1,7 +1,11 @@
 package dependencymanager
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+
+	"gopkg.in/yaml.v3"
 )
 
 type DependencyManager interface {
@@ -25,7 +29,28 @@ type DefaultDependencyManager struct {
 func NewDefaultDependencyManager(dependenciesFilePath string) (*DefaultDependencyManager, error) {
 	// Reads the config file and store the info in a private field
 	// Inits the container provider
-	panic("not implemented")
+	// TODO: read from file
+
+	configDataBytes, err := ioutil.ReadFile(dependenciesFilePath)
+	if err != nil {
+		return nil, err
+	}
+
+	//fmt.Println(string(configDataBytes))
+
+	var dependencies DependencyCollection
+
+	err = yaml.Unmarshal(configDataBytes, &dependencies)
+	if err != nil {
+		return nil, err
+	}
+	depsOut, _ := json.Marshal(&dependencies)
+	fmt.Println(string(depsOut))
+
+	return &DefaultDependencyManager{
+		containerProvider: *NewInfraProvider(dependencies),
+		dependencies:      make(map[string]innerDependency),
+	}, nil
 }
 
 type innerDependency struct {
@@ -58,15 +83,20 @@ func (d DefaultDependencyManager) GetDependencyInfo(dependencyID string) (*Depen
 		return nil, err
 	}
 
-	port, err := container.GetPortAsInt("TODO it comes from config")
+	// TODO simple man implementation: it assumes there's always a port to be exposed, picking the first one
+	firstPort := container.GetPortNames()[0]
+
+	port, err := container.GetPortAsInt(firstPort)
 	if err != nil {
 		return nil, err
 	}
 
 	dependencyInfo := DependencyInfo{
-		Host: container.GetIP("TODO it comes from config"),
+		Host: container.GetIP(firstPort),
 		Port: port,
 	}
+
+	fmt.Printf("%+v\n", dependencyInfo)
 
 	d.dependencies[dependencyID] = innerDependency{
 		container:      container,

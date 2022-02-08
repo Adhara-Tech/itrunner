@@ -1,4 +1,4 @@
-module github.com/AdharaProjects/project1-example
+module github.com/Adhara-Tech/project1-example
 
 go 1.16
 

@@ -2,23 +2,24 @@ package dependencymanager
 
 import "github.com/ory/dockertest/docker"
 
-type ContainerInfo struct {
-	ContainerRunConfig ContainerRunConfig `mapstructure:"container"`
+type Dependency struct {
+	ID        string              `yaml:"id"`
+	Container *ContainerRunConfig `yaml:"container"`
 }
 
 // ContainerRunConfig
 type ContainerRunConfig struct {
-	Repository   string                               `mapstructure:"repository"`
-	Tag          string                               `mapstructure:"tag"`
-	Env          []string                             `mapstructure:"env"`
-	Name         string                               `mapstructure:"name"`
-	Entrypoint   []string                             `mapstructure:"entrypoint"`
-	Cmd          []string                             `mapstructure:"cmd"`
-	Mounts       []string                             `mapstructure:"mounts"`
-	Links        []string                             `mapstructure:"links"`
-	ExposedPorts []string                             `mapstructure:"exposed_ports"`
-	ExtraHosts   []string                             `mapstructure:"extra_hosts"`
-	Labels       map[string]string                    `mapstructure:"labels"`
-	PortBindings map[docker.Port][]docker.PortBinding `mapstructure:"port_bindings"`
-	InDocker     bool                                 `mapstructure:"in_docker"`
+	Repository   string                               `yaml:"repository"`
+	Tag          string                               `yaml:"tag"`
+	Env          []string                             `yaml:"env"`
+	Name         string                               `yaml:"name"`
+	Entrypoint   []string                             `yaml:"entrypoint"`
+	Cmd          []string                             `yaml:"cmd"`
+	Mounts       []string                             `yaml:"mounts"`
+	Links        []string                             `yaml:"links"`
+	ExposedPorts []string                             `yaml:"exposed_ports"`
+	ExtraHosts   []string                             `yaml:"extra_hosts"`
+	Labels       map[string]string                    `yaml:"labels"`
+	PortBindings map[docker.Port][]docker.PortBinding `yaml:"port_bindings"`
+	InDocker     bool                                 `yaml:"in_docker"`
 }

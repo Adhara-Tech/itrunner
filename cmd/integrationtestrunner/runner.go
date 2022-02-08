@@ -3,10 +3,11 @@ package integrationtestrunner
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Adhara-Tech/itrunner/pkg/uc/dependencymanager"
 	"io"
 	"io/ioutil"
 	"os"
+
+	"github.com/Adhara-Tech/itrunner/pkg/uc/dependencymanager"
 
 	"github.com/Adhara-Tech/itrunner/pkg/itrunner"
 
@@ -63,7 +64,7 @@ func Run(opts RunnerOptions) error {
 	}
 
 	// TODO path to the dependencies file must be provided
-	dependencyManager, err := dependencymanager.NewDefaultDependencyManager("TODO")
+	dependencyManager, err := dependencymanager.NewDefaultDependencyManager(opts.CompatibilityMatrixDependenciesFilePath)
 	if err != nil {
 		return err
 	}

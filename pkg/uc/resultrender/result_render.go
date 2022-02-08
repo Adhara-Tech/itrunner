@@ -3,9 +3,9 @@ package resultrender
 import (
 	"io"
 
-	"github.com/Adhara-Tech/itrunner/pkg/uc/gotestrunner"
+	"github.com/Adhara-Tech/itrunner/pkg/itrunner"
 )
 
 type Render interface {
-	Render(gotestrunner.SuiteExecutionResult, io.Writer) error
+	Render(itrunner.SuiteExecutionResult, io.Writer) error
 }

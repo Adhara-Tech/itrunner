@@ -9,9 +9,10 @@ import (
 
 func main() {
 	opt := integrationtestrunner.RunnerOptions{
-		CompatibilityMatrixConfigFilePath: "./compatibility-matrix-tests.yaml",
-		OutputFormat:                      integrationtestrunner.OutputFormatJson,
-		OutputFile:                        "results.json",
+		CompatibilityMatrixConfigFilePath:       "./compatibility-matrix-tests.yaml",
+		CompatibilityMatrixDependenciesFilePath: "./dependencies.yaml",
+		OutputFormat:                            integrationtestrunner.OutputFormatJson,
+		OutputFile:                              "results.json",
 	}
 	err := integrationtestrunner.Run(opt)
 	if err != nil {
