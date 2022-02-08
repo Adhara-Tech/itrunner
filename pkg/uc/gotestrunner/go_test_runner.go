@@ -38,6 +38,8 @@ func (d DefaultTestRunner) RunTest(test GoTest) (*GoTestResult, error) {
 	base64EnvData := base64.StdEncoding.EncodeToString(envData)
 	envVar := fmt.Sprintf("%s=%s", exportedtypes.TestRunnerConfEnvVarName, base64EnvData)
 
+	fmt.Println(envVar)
+
 	args := make([]string, 0)
 	// TODO gotestsum must be an option
 	args = append(args, "test")

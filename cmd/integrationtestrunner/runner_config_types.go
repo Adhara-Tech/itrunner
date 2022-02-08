@@ -37,7 +37,7 @@ type TestConfigInputDataFrom struct {
 }
 
 type ContainerTestConfig struct {
-	ContainerID string `yaml:"containerId"`
+	ContainerID string `yaml:"id"`
 	TemplateVar string `yaml:"templateVar"`
 }
 

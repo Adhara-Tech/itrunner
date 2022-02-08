@@ -72,7 +72,7 @@ func (d DefaultIntegrationTestsRunner) doExecuteTestGroup(group TestGroup) (*Tes
 		// Execute tests
 		testExecutionResult, err := d.testRunner.RunTest(gotestrunner.GoTest{
 			Packages:          group.Packages,
-			EnvConfigFormat:   "", //TODO need to be added to config... or we can try to deduce it
+			EnvConfigFormat:   "YAML", //TODO need to be added to config... or we can try to deduce it
 			EnvConfigFilePath: generatedConfigOutput.OutputFilePath,
 		})
 
