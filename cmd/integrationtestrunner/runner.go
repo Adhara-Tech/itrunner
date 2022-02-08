@@ -7,11 +7,13 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/AdharaProjects/compatibility-matrix-test-executor/pkg/uc/gotestrunner"
+	"github.com/Adhara-Tech/itrunner/pkg/uc/dependencymanager"
+
+	"github.com/Adhara-Tech/itrunner/pkg/itrunner"
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/AdharaProjects/compatibility-matrix-test-executor/pkg/uc/resultrender"
+	"github.com/Adhara-Tech/itrunner/pkg/uc/resultrender"
 )
 
 type OutputFormat string
@@ -22,9 +24,10 @@ const (
 )
 
 type RunnerOptions struct {
-	CompatibilityMatrixConfigFilePath string
-	OutputFile                        string
-	OutputFormat                      OutputFormat
+	CompatibilityMatrixConfigFilePath       string
+	CompatibilityMatrixDependenciesFilePath string
+	OutputFile                              string
+	OutputFormat                            OutputFormat
 }
 
 func Run(opts RunnerOptions) error {
@@ -48,9 +51,9 @@ func Run(opts RunnerOptions) error {
 
 	fmt.Println(string(dataBytes))
 
-	var dependencieslist gotestrunner.DependenciesList
+	var dependencieslist itrunner.DependenciesList
 	for _, dependency := range config.Suite.Dependencies.Containers {
-		container := gotestrunner.ContainerSpec{
+		container := itrunner.ContainerSpec{
 			ID:         dependency.ID,
 			Repository: dependency.Repository,
 			Tag:        dependency.Tag,
@@ -60,38 +63,57 @@ func Run(opts RunnerOptions) error {
 
 	}
 
-	infraProvider := gotestrunner.NewInfraProvider(dependencieslist)
-	testRunner := gotestrunner.NewTestRunner(infraProvider)
-	testSet := gotestrunner.Suite{}
-	testSet.AllTests = make([]gotestrunner.TestGroup, 0)
+	// TODO path to the dependencies file must be provided
+	dependencyManager, err := dependencymanager.NewDefaultDependencyManager(opts.CompatibilityMatrixDependenciesFilePath)
+	if err != nil {
+		return err
+	}
+	testRunner, err := itrunner.NewDefaultIntegrationTestsRunner(dependencyManager)
+	if err != nil {
+		return err
+	}
+	testSuite := itrunner.Suite{}
+	testSuite.AllTests = make([]itrunner.TestGroup, 0)
 
 	for _, testGroup := range config.Suite.TestGroupList {
-		currentTestGroup := gotestrunner.TestGroup{
+		currentTestGroup := itrunner.TestGroup{
 			Name:     testGroup.Name,
 			Packages: testGroup.PackageList,
-			Versions: make([]gotestrunner.Version, 0),
+			Versions: make([]itrunner.Version, 0),
 		}
 
 		for _, currentVersion := range testGroup.VersionList {
-			version := gotestrunner.Version{
+			version := itrunner.Version{
 				ID:  currentVersion.Name,
 				Env: currentVersion.EnvVarList,
 			}
 
 			for _, dependency := range currentVersion.DependsOn {
-				version.DependsOn = append(version.DependsOn, gotestrunner.TestDependency{
+				version.DependsOn = append(version.DependsOn, itrunner.TestDependency{
 					ID: dependency.ID,
 				})
 
 			}
+			version.TestConfig = itrunner.VersionTestConfig{
+				TemplatePath:  currentVersion.TestConfig.TemplatePath,
+				OutputPath:    currentVersion.TestConfig.OutputPath,
+				InputDataFrom: itrunner.ConfigInputDataFrom{Dependencies: make([]itrunner.ConfigInputDataFromDependency, 0, 0)},
+			}
+
+			for _, currentDependency := range currentVersion.TestConfig.InputDataFrom.ContainerTestConfigList {
+				version.TestConfig.InputDataFrom.Dependencies = append(version.TestConfig.InputDataFrom.Dependencies, itrunner.ConfigInputDataFromDependency{
+					ID:          currentDependency.ContainerID,
+					TemplateVar: currentDependency.TemplateVar,
+				})
+			}
 			currentTestGroup.Versions = append(currentTestGroup.Versions, version)
 		}
 
-		testSet.AllTests = append(testSet.AllTests, currentTestGroup)
+		testSuite.AllTests = append(testSuite.AllTests, currentTestGroup)
 
 	}
 
-	result, err := testRunner.RunTests(testSet)
+	result, err := testRunner.RunSuite(testSuite)
 	if err != nil {
 		return err
 	}

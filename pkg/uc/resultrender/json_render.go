@@ -4,14 +4,14 @@ import (
 	"encoding/json"
 	"io"
 
-	"github.com/AdharaProjects/compatibility-matrix-test-executor/pkg/uc/gotestrunner"
+	"github.com/Adhara-Tech/itrunner/pkg/itrunner"
 )
 
 type JsonRender struct {
 }
 
-func (r JsonRender) Render(result gotestrunner.SuiteExecutionResult, writer io.Writer) error {
-	content, err := json.Marshal(map[string]gotestrunner.SuiteExecutionResult{
+func (r JsonRender) Render(result itrunner.SuiteExecutionResult, writer io.Writer) error {
+	content, err := json.Marshal(map[string]itrunner.SuiteExecutionResult{
 		"suite": result,
 	})
 	if err != nil {

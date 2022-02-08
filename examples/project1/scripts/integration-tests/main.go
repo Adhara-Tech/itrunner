@@ -3,15 +3,16 @@ package main
 import (
 	"fmt"
 
-	"github.com/AdharaProjects/compatibility-matrix-test-executor/cmd/integrationtestrunner"
-	//"github.com/AdharaProjects/compatibility-matrix-test-executor/cmd/runner"
+	"github.com/Adhara-Tech/itrunner/cmd/integrationtestrunner"
+	//"github.com/Adhara-Tech/itrunner/cmd/runner"
 )
 
 func main() {
 	opt := integrationtestrunner.RunnerOptions{
-		CompatibilityMatrixConfigFilePath: "./compatibility-matrix-tests.yaml",
-		OutputFormat:                      integrationtestrunner.OutputFormatJson,
-		OutputFile:                        "results.json",
+		CompatibilityMatrixConfigFilePath:       "./compatibility-matrix-tests.yaml",
+		CompatibilityMatrixDependenciesFilePath: "./dependencies.yaml",
+		OutputFormat:                            integrationtestrunner.OutputFormatJson,
+		OutputFile:                              "results.json",
 	}
 	err := integrationtestrunner.Run(opt)
 	if err != nil {

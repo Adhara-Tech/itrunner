@@ -1,0 +1,20 @@
+dependencies: # moved to 1st level (2 yamls)
+  - id: postgres_14.1
+    container:
+      repository: postgres
+      tag: 14.1
+      env:
+        - "POSTGRES_PASSWORD=postgres"
+      port_bindings:
+        "5432/tcp":
+          - HostPort: "5432"
+  - id: postgres_13.5
+    container:
+      repository: postgres
+      tag: 13.5
+      in_docker: true
+      env:
+        - "POSTGRES_PASSWORD=postgres"
+      port_bindings:
+        "5432/tcp":
+          - HostPort: "5433"

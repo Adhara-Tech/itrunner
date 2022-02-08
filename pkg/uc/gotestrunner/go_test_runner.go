@@ -1,93 +1,68 @@
 package gotestrunner
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
-
-	"github.com/AdharaProjects/compatibility-matrix-test-executor/pkg/containertesthelper"
+	"github.com/Adhara-Tech/itrunner/cmd/exportedtypes"
+	"github.com/Adhara-Tech/itrunner/pkg/uc/dependencymanager"
+	"io/ioutil"
 )
 
 type TestRunner interface {
-	RunTests(set Suite) (*SuiteExecutionResult, error)
+	RunTest(test GoTest) (*GoTestResult, error)
 }
 
 var _ TestRunner = (*DefaultTestRunner)(nil)
 
 type DefaultTestRunner struct {
-	infraProvider InfraProvider
 }
 
-type InfraProvider interface {
-	SpinUpContainer(id string) (*containertesthelper.Container, error)
-}
+func (d DefaultTestRunner) RunTest(test GoTest) (*GoTestResult, error) {
 
-func NewTestRunner(infraProvider InfraProvider) DefaultTestRunner {
-	return DefaultTestRunner{
-		infraProvider: infraProvider,
-	}
-}
-
-func (d DefaultTestRunner) RunTests(testSet Suite) (*SuiteExecutionResult, error) {
-
-	allResults := make([]TestGroupExecutionResult, 0)
-
-	for _, testDefinition := range testSet.AllTests {
-		testGroupExecutionResult, err := d.doExecuteTestGroup(testDefinition)
-		if err != nil {
-			return nil, err
-		}
-		allResults = append(allResults, *testGroupExecutionResult)
+	fileData, err := ioutil.ReadFile(test.EnvConfigFilePath)
+	if err != nil {
+		return nil, err
 	}
 
-	return &SuiteExecutionResult{AllTestResults: allResults}, nil
-}
+	testEnvData := exportedtypes.TestEnvExecutionData{
+		EnvConfigFormat: test.EnvConfigFormat,
+		EnvData:         string(fileData),
+	}
 
-func (d DefaultTestRunner) doExecuteTestGroup(group TestGroup) (*TestGroupExecutionResult, error) {
+	envData, err := json.Marshal(testEnvData)
+	if err != nil {
+		return nil, err
+	}
 
-	results := make([]VersionExecutionResult, 0)
+	base64EnvData := base64.StdEncoding.EncodeToString(envData)
+	envVar := fmt.Sprintf("%s=%s", exportedtypes.TestRunnerConfEnvVarName, base64EnvData)
+
+	fmt.Println(envVar)
 
 	args := make([]string, 0)
 	// TODO gotestsum must be an option
 	args = append(args, "test")
-	args = append(args, group.Packages...)
-	for _, version := range group.Versions {
-
-		fmt.Println("starting version " + version.ID)
-		// request infra:
-		var containers []*containertesthelper.Container = make([]*containertesthelper.Container, 0)
-		for _, dependency := range version.DependsOn {
-			fmt.Println("starting container " + dependency.ID)
-			container, err := d.infraProvider.SpinUpContainer(dependency.ID)
-			if err != nil {
-				return nil, err
-			}
-			containers = append(containers, container)
+	args = append(args, test.Packages...)
+	exitCode, err := Command("go", []string{envVar}, args...).ExecuteWithLog()
+	testResult := TestSuccess
+	if err != nil {
+		return nil, err
+	} else {
+		if exitCode != 0 {
+			testResult = TestFailure
 		}
-
-		exitCode, err := Command("go", version.Env, args...).ExecuteWithLog()
-		testResult := TestSuccess
-		if err != nil {
-			return nil, err
-		} else {
-			if exitCode != 0 {
-				testResult = TestFailure
-			}
-		}
-
-		// shutdown infra
-		for _, container := range containers {
-			if err = container.Purge(); err != nil {
-				return nil, err
-			}
-		}
-
-		results = append(results, VersionExecutionResult{
-			ID:     version.ID,
-			Result: testResult,
-		})
 	}
 
-	return &TestGroupExecutionResult{
-		Name:                    group.Name,
-		VersionExecutionResults: results,
+	return &GoTestResult{
+		Result: testResult,
 	}, nil
+}
+
+type InfraProvider interface {
+	SpinUpContainer(id string) (*dependencymanager.Container, error)
+}
+
+func NewDefaultTestRunner() DefaultTestRunner {
+	return DefaultTestRunner{}
 }

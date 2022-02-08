@@ -1,4 +1,4 @@
-package containertesthelper
+package dependencymanager
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"github.com/ory/dockertest"
 )
 
-var TestConfigPath string
+//var TestConfigPath string
 
 type ContainersPool struct {
 	pool *dockertest.Pool
@@ -19,6 +19,14 @@ type Container struct {
 	myPool           *ContainersPool
 	resource         *dockertest.Resource
 	isDockerInDocker bool
+}
+
+func (container *Container) GetPortNames() []string {
+	result := make([]string, 0)
+	for portName := range container.resource.Container.NetworkSettings.Ports {
+		result = append(result, string(portName))
+	}
+	return result
 }
 
 func (container *Container) GetPort(portName string) string {
