@@ -52,7 +52,7 @@ type innerDependency struct {
 	dependencyInfo DependencyInfo
 }
 
-func (d DefaultDependencyManager) ShutDownDependencies() {
+func (d *DefaultDependencyManager) ShutDownDependencies() {
 	for depID, dep := range d.dependencies {
 		err := dep.container.Purge()
 		if err != nil {
@@ -60,6 +60,8 @@ func (d DefaultDependencyManager) ShutDownDependencies() {
 			fmt.Println(err)
 		}
 	}
+
+	d.dependencies = make(map[string]innerDependency)
 }
 
 func (d DefaultDependencyManager) GetDependencyInfo(dependencyID string) (*DependencyInfo, error) {
