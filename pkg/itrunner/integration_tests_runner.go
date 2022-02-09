@@ -62,6 +62,14 @@ func (d DefaultIntegrationTestsRunner) doExecuteTestGroup(group TestGroup) (*Tes
 			configOptions.TemplateData[dependency.TemplateVar] = depInfo
 		}
 
+		// Request all dependencies
+		for _, dependency := range version.DependsOn {
+			_, err := d.dependencyManager.GetDependencyInfo(dependency.ID)
+			if err != nil {
+				return nil, err
+			}
+		}
+
 		//Generate configuration
 		generatedConfigOutput, err := configmaker.GenerateConfig(configOptions)
 		if err != nil {
