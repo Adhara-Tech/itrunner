@@ -2,13 +2,13 @@ package foostorage_test
 
 import (
 	"fmt"
-	"github.com/AdharaProjects/project1-example/pkg/storage/foostorage"
 	"os"
 	"testing"
+
+	"github.com/Adhara-Tech/project1-example/pkg/storage/foostorage"
 )
 
 func TestDoFoo(t *testing.T) {
 	foostorage.DoFoo()
 	fmt.Println(os.Getenv("CUSTOM_KEY"))
-	//t.Error("Foo not implemented")
 }

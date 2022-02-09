@@ -1,7 +1,6 @@
 package dependencymanager
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 
@@ -29,14 +28,11 @@ type DefaultDependencyManager struct {
 func NewDefaultDependencyManager(dependenciesFilePath string) (*DefaultDependencyManager, error) {
 	// Reads the config file and store the info in a private field
 	// Inits the container provider
-	// TODO: read from file
 
 	configDataBytes, err := ioutil.ReadFile(dependenciesFilePath)
 	if err != nil {
 		return nil, err
 	}
-
-	//fmt.Println(string(configDataBytes))
 
 	var dependencies DependencyCollection
 
@@ -44,8 +40,6 @@ func NewDefaultDependencyManager(dependenciesFilePath string) (*DefaultDependenc
 	if err != nil {
 		return nil, err
 	}
-	depsOut, _ := json.Marshal(&dependencies)
-	fmt.Println(string(depsOut))
 
 	return &DefaultDependencyManager{
 		containerProvider: *NewInfraProvider(dependencies),
@@ -80,11 +74,15 @@ func (d DefaultDependencyManager) GetDependencyInfo(dependencyID string) (*Depen
 	fmt.Println("starting container " + dependencyID)
 	container, err := d.containerProvider.SpinUpContainer(dependencyID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to request dependency %s: %w", dependencyID, err)
 	}
 
 	// TODO simple man implementation: it assumes there's always a port to be exposed, picking the first one
-	firstPort := container.GetPortNames()[0]
+	portNames := container.GetPortNames()
+	if len(portNames) == 0 {
+		return nil, fmt.Errorf("Container of dependency %s does not expose any port", dependencyID)
+	}
+	firstPort := portNames[0]
 
 	port, err := container.GetPortAsInt(firstPort)
 	if err != nil {

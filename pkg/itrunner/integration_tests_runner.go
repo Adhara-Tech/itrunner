@@ -10,7 +10,6 @@ type IntegrationTestsRunner interface {
 }
 
 type DefaultIntegrationTestsRunner struct {
-	//goTestRunner GoTestRunner
 	dependencyManager dependencymanager.DependencyManager
 	testRunner        gotestrunner.TestRunner
 }
@@ -61,6 +60,14 @@ func (d DefaultIntegrationTestsRunner) doExecuteTestGroup(group TestGroup) (*Tes
 				return nil, err
 			}
 			configOptions.TemplateData[dependency.TemplateVar] = depInfo
+		}
+
+		// Request all dependencies
+		for _, dependency := range version.DependsOn {
+			_, err := d.dependencyManager.GetDependencyInfo(dependency.ID)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		//Generate configuration
