@@ -49,7 +49,6 @@ func executeCommand(c command, logs bool) (int, error) {
 	cmd.Start()
 
 	scanner := bufio.NewScanner(stdOutPipe)
-	//scanner.Split(bufio.ScanWords)
 	for scanner.Scan() {
 		m := scanner.Text()
 		fmt.Println(m)

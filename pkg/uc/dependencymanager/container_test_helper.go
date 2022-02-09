@@ -9,8 +9,6 @@ import (
 	"github.com/ory/dockertest"
 )
 
-//var TestConfigPath string
-
 type ContainersPool struct {
 	pool *dockertest.Pool
 }

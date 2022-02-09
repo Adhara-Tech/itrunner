@@ -13,12 +13,6 @@ type CommandLineRender struct {
 
 func (r CommandLineRender) Render(result itrunner.SuiteExecutionResult, writer io.Writer) error {
 	data := make([][]string, 0)
-	//{
-	//	[]string{"1/1/2014", "Domain name", "1234", "$10.98"},
-	//	[]string{"1/1/2014", "January Hosting", "2345", "$54.95"},
-	//	[]string{"1/4/2014", "February Hosting", "3456", "$51.00"},
-	//	[]string{"1/4/2014", "February Extra Bandwidth", "4567", "$30.00"},
-	//}
 
 	for _, currentTestExecutionResult := range result.AllTestResults {
 		for _, currentVersionExecutionResult := range currentTestExecutionResult.VersionExecutionResults {

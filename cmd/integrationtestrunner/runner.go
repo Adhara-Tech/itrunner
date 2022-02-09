@@ -63,7 +63,6 @@ func Run(opts RunnerOptions) error {
 
 	}
 
-	// TODO path to the dependencies file must be provided
 	dependencyManager, err := dependencymanager.NewDefaultDependencyManager(opts.CompatibilityMatrixDependenciesFilePath)
 	if err != nil {
 		return err

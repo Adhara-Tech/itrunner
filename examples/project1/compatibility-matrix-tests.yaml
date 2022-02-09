@@ -6,11 +6,11 @@ suite:
       versions:
         - versionName: 14.1
           env:
-            - CONFIG=./tmp-configs/databases/postgres_config.yml
+            - CONFIG=test-config.yml
           dependsOn:
             - id: postgres_14.1
           testConfig:
-            templatePath: ./config-templates/databases/postgres_config.tpl.yml
+            templatePath: ./test-config.tpl
             inputDataFrom:
               containers:
                 - containerId: postgres_14.1
@@ -26,7 +26,7 @@ suite:
           dependsOn:
             - id: postgres_13.5
           testConfig:
-            templatePath: ./config-templates/databases/postgres_config.tpl.yml
+            templatePath: ./test-config.tpl
             inputDataFrom:
               containers:
                 - containerId: postgres_13.5

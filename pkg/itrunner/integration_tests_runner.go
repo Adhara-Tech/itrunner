@@ -10,7 +10,6 @@ type IntegrationTestsRunner interface {
 }
 
 type DefaultIntegrationTestsRunner struct {
-	//goTestRunner GoTestRunner
 	dependencyManager dependencymanager.DependencyManager
 	testRunner        gotestrunner.TestRunner
 }

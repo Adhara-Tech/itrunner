@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/Adhara-Tech/itrunner/cmd/integrationtestrunner"
-	//"github.com/Adhara-Tech/itrunner/cmd/runner"
 )
 
 func main() {
