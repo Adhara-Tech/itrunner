@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/AdharaProjects/project1-example/pkg/storage/foostorage"
+	"github.com/Adhara-Tech/project1-example/pkg/storage/foostorage"
 )
 
 func TestDoFoo(t *testing.T) {

@@ -1,8 +1,9 @@
 package varstorage_test
 
 import (
-	"github.com/AdharaProjects/project1-example/pkg/storage/varstorage"
 	"testing"
+
+	"github.com/Adhara-Tech/project1-example/pkg/storage/varstorage"
 )
 
 func TestDoVar(t *testing.T) {
