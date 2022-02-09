@@ -41,9 +41,6 @@ func (d DefaultIntegrationTestsRunner) doExecuteTestGroup(group TestGroup) (*Tes
 
 	results := make([]VersionExecutionResult, 0)
 
-	args := make([]string, 0)
-	args = append(args, "test")
-	args = append(args, group.Packages...)
 	for _, version := range group.Versions {
 
 		// Obtain info about dependencies. Dependency manager starts services when possible or retrieve the info
