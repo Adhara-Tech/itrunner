@@ -10,8 +10,7 @@ const (
 )
 
 type Suite struct {
-	AllTests     []TestGroup
-	Dependencies DependenciesList
+	AllTests []TestGroup
 }
 
 type SuiteExecutionResult struct {
@@ -59,18 +58,6 @@ type ConfigInputDataFrom struct {
 type ConfigInputDataFromDependency struct {
 	ID          string `yaml:"id"`
 	TemplateVar string `yaml:"templateVar"`
-}
-
-type DependenciesList struct {
-	Containers []ContainerSpec
-}
-
-type ContainerSpec struct {
-	ID         string
-	Repository string
-	Tag        string
-	Env        []string
-	Ports      []string
 }
 
 func (testResult TestResult) MarshalJSON() ([]byte, error) {

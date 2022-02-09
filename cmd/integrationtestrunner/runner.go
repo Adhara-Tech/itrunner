@@ -51,18 +51,6 @@ func Run(opts RunnerOptions) error {
 
 	fmt.Println(string(dataBytes))
 
-	var dependencieslist itrunner.DependenciesList
-	for _, dependency := range config.Suite.Dependencies.Containers {
-		container := itrunner.ContainerSpec{
-			ID:         dependency.ID,
-			Repository: dependency.Repository,
-			Tag:        dependency.Tag,
-			Env:        dependency.Env,
-		}
-		dependencieslist.Containers = append(dependencieslist.Containers, container)
-
-	}
-
 	dependencyManager, err := dependencymanager.NewDefaultDependencyManager(opts.CompatibilityMatrixDependenciesFilePath)
 	if err != nil {
 		return err
