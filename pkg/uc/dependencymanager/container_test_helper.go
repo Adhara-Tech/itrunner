@@ -41,7 +41,7 @@ func (container *Container) getBoundIP(portName string) string {
 }
 
 func (container *Container) getGatewayIP(portName string) string {
-	return container.resource.GetBoundIP(portName)
+	return container.resource.Container.NetworkSettings.Gateway
 }
 
 func (container *Container) GetIP(portName string) string {

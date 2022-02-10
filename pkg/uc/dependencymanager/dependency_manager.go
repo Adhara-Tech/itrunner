@@ -7,6 +7,11 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type DependencyManagerOptions struct {
+	DependenciesFilePath string
+	InDocker             bool
+}
+
 type DependencyManager interface {
 	GetDependencyInfo(dependencyID string) (*DependencyInfo, error)
 	ShutDownDependencies()
@@ -23,13 +28,14 @@ var _ DependencyManager = (*DefaultDependencyManager)(nil)
 type DefaultDependencyManager struct {
 	containerProvider containerProvider
 	dependencies      map[string]innerDependency
+	inDocker          bool
 }
 
-func NewDefaultDependencyManager(dependenciesFilePath string) (*DefaultDependencyManager, error) {
+func NewDefaultDependencyManager(opts DependencyManagerOptions) (*DefaultDependencyManager, error) {
 	// Reads the config file and store the info in a private field
 	// Inits the container provider
 
-	configDataBytes, err := ioutil.ReadFile(dependenciesFilePath)
+	configDataBytes, err := ioutil.ReadFile(opts.DependenciesFilePath)
 	if err != nil {
 		return nil, err
 	}
@@ -44,6 +50,7 @@ func NewDefaultDependencyManager(dependenciesFilePath string) (*DefaultDependenc
 	return &DefaultDependencyManager{
 		containerProvider: *NewInfraProvider(dependencies),
 		dependencies:      make(map[string]innerDependency),
+		inDocker:          opts.InDocker,
 	}, nil
 }
 
@@ -74,7 +81,7 @@ func (d DefaultDependencyManager) GetDependencyInfo(dependencyID string) (*Depen
 	}
 
 	fmt.Println("starting container " + dependencyID)
-	container, err := d.containerProvider.SpinUpContainer(dependencyID)
+	container, err := d.containerProvider.SpinUpContainer(dependencyID, d.inDocker)
 	if err != nil {
 		return nil, fmt.Errorf("Failed to request dependency %s: %w", dependencyID, err)
 	}

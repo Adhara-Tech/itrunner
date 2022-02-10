@@ -21,5 +21,4 @@ type ContainerRunConfig struct {
 	ExtraHosts   []string                             `yaml:"extra_hosts"`
 	Labels       map[string]string                    `yaml:"labels"`
 	PortBindings map[docker.Port][]docker.PortBinding `yaml:"port_bindings"`
-	InDocker     bool                                 `yaml:"in_docker"`
 }
