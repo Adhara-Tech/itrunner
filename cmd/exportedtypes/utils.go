@@ -5,15 +5,16 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"gopkg.in/yaml.v3"
 	"os"
+
+	"gopkg.in/yaml.v3"
 )
 
 func ReadTestEnvExecutionData(config interface{}) error {
 	base64ConfigStr, ok := os.LookupEnv(TestRunnerConfEnvVarName)
 
 	if !ok {
-		return errors.New(fmt.Sprintf("Env variable %s not found or empty content", TestRunnerConfEnvVarName))
+		return fmt.Errorf("env variable %s not found or empty content", TestRunnerConfEnvVarName)
 	}
 
 	configStr, err := base64.StdEncoding.DecodeString(base64ConfigStr)
@@ -33,16 +34,13 @@ func ReadTestEnvExecutionData(config interface{}) error {
 		if err != nil {
 			return err
 		}
-		break
 	case TestConfigFormatJson:
 		err := json.Unmarshal([]byte(envExecutionData.EnvData), config)
 		if err != nil {
 			return err
 		}
-		break
 	case TestConfigFormatRaw:
-		config = envExecutionData.EnvData
-		break
+		return fmt.Errorf("raw format not implemented")
 	default:
 		return errors.New("unknown test config format")
 	}

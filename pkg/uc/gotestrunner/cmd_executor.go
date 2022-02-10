@@ -46,7 +46,9 @@ func executeCommand(c command, logs bool) (int, error) {
 		return 0, err
 	}
 
-	cmd.Start()
+	if err := cmd.Start(); err != nil {
+		return 0, err
+	}
 
 	scanner := bufio.NewScanner(stdOutPipe)
 	for scanner.Scan() {
