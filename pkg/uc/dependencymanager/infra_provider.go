@@ -17,7 +17,7 @@ func NewInfraProvider(deps DependencyCollection) *containerProvider {
 
 }
 
-func (d containerProvider) SpinUpContainer(id string) (*Container, error) {
+func (d containerProvider) SpinUpContainer(id string, inDocker bool) (*Container, error) {
 	containerSpec := d.findContainerSpec(id)
 	if containerSpec == nil {
 		return nil, errors.Errorf("Container with ID %s not found in config", id)
@@ -29,7 +29,7 @@ func (d containerProvider) SpinUpContainer(id string) (*Container, error) {
 		Name:         containerSpec.ID,
 		PortBindings: containerSpec.Container.PortBindings,
 	}
-	container, err := d.containersPool.Run(config, false, func(container *Container) error {
+	container, err := d.containersPool.Run(config, inDocker, func(container *Container) error {
 		return nil
 	})
 	return container, err

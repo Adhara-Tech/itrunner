@@ -28,6 +28,7 @@ type RunnerOptions struct {
 	CompatibilityMatrixDependenciesFilePath string
 	OutputFile                              string
 	OutputFormat                            OutputFormat
+	InDocker                                bool
 }
 
 func Run(opts RunnerOptions) error {
@@ -51,7 +52,10 @@ func Run(opts RunnerOptions) error {
 
 	fmt.Println(string(dataBytes))
 
-	dependencyManager, err := dependencymanager.NewDefaultDependencyManager(opts.CompatibilityMatrixDependenciesFilePath)
+	dependencyManager, err := dependencymanager.NewDefaultDependencyManager(dependencymanager.DependencyManagerOptions{
+		DependenciesFilePath: opts.CompatibilityMatrixDependenciesFilePath,
+		InDocker:             opts.InDocker,
+	})
 	if err != nil {
 		return err
 	}
