@@ -31,23 +31,23 @@ type RunnerOptions struct {
 	InDocker                                bool
 }
 
-func Run(opts RunnerOptions) error {
+func Run(opts RunnerOptions) (*itrunner.SuiteExecutionResult, error) {
 
 	configDataBytes, err := ioutil.ReadFile(opts.CompatibilityMatrixConfigFilePath)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	var config CompatibilityMatrixTestConfig
 
 	err = yaml.Unmarshal(configDataBytes, &config)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	dataBytes, err := json.MarshalIndent(config, "", "   ")
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	fmt.Println(string(dataBytes))
@@ -57,11 +57,11 @@ func Run(opts RunnerOptions) error {
 		InDocker:             opts.InDocker,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 	testRunner, err := itrunner.NewDefaultIntegrationTestsRunner(dependencyManager)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	testSuite := itrunner.Suite{}
 	testSuite.AllTests = make([]itrunner.TestGroup, 0)
@@ -106,7 +106,7 @@ func Run(opts RunnerOptions) error {
 
 	result, err := testRunner.RunSuite(testSuite)
 	if err != nil {
-		return err
+		return result, err
 	}
 
 	render := newRender(opts.OutputFormat)
@@ -116,7 +116,7 @@ func Run(opts RunnerOptions) error {
 	if opts.OutputFile != "" {
 		resultsWriter, err = os.Create(opts.OutputFile)
 		if err != nil {
-			return err
+			return result, err
 		}
 	} else {
 		resultsWriter = os.Stdout
@@ -124,10 +124,10 @@ func Run(opts RunnerOptions) error {
 
 	err = render.Render(*result, resultsWriter)
 	if err != nil {
-		return err
+		return result, err
 	}
 
-	return nil
+	return result, nil
 }
 
 func newRender(format OutputFormat) resultrender.Render {
