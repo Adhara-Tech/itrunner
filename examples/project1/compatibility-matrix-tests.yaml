@@ -12,9 +12,9 @@ suite:
           testConfig:
             templatePath: ./test-config.tpl
             inputDataFrom:
-              containers:
-                - containerId: postgres_14.1
-                  templateVar: db
+              dependencies:
+                - id: postgres_14.1
+                  templateVar: Db
               files:
                 - path: some_file.yaml
 
@@ -28,9 +28,9 @@ suite:
           testConfig:
             templatePath: ./test-config.tpl
             inputDataFrom:
-              containers:
-                - containerId: postgres_13.5
-                  templateVar: db
+              dependencies:
+                - id: postgres_13.5
+                  templateVar: Db
               files:
                 - path: some_file.yaml
 

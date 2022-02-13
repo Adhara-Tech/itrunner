@@ -1,1 +1,3 @@
-this is a test template
+applicationHost: "{{ .Db.Host }}"
+applicationPort: "{{ .Db.Port }}"
+
