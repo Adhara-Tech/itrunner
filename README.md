@@ -4,6 +4,15 @@ _IT Runner_ is a tool to automate the execution of integration tests across mult
 
 > **DISCLAIMER**: _IT Runner_ is still in its early beta stages. Please mind that breaking changes in its APIs and configuration files format can be made until a first 1.X version is stabilised.
 
+- [IT Runner - Integration Tests executor](#it-runner---integration-tests-executor)
+  * [Usage](#usage)
+    + [Suite configuration](#suite-configuration)
+    + [Templating](#templating)
+    + [Dependencies configuration](#dependencies-configuration)
+    + [Invoking the tool from GO code](#invoking-the-tool-from-go-code)
+    + [Using the config library in go tests](#using-the-config-library-in-go-tests)
+  * [Roadmap](#roadmap)
+
 ## Usage
 
 _ITRunner_ relies on two configuration files to bootstrap the components to be used in the integration tests (dependencies configuration file) and to execute the tests themselves (suite configuration file).
