@@ -13,7 +13,7 @@ func main() {
 		OutputFormat:                            integrationtestrunner.OutputFormatJson,
 		OutputFile:                              "results.json",
 	}
-	err := integrationtestrunner.Run(opt)
+	_, err := integrationtestrunner.Run(opt)
 	if err != nil {
 		fmt.Println(err)
 	}
