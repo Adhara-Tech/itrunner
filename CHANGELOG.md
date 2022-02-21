@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [0.1.1] - 2022-02-21
+
+### Added
+- Additional config options for Docker container dependencies
+  - Mounts
+  - Entrypoint
+  - CMD
+  - ExtraHosts
+  - Labels
+
 ## [0.1.0] - 2022-02-11
 
 First Beta version
