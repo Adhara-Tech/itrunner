@@ -59,6 +59,8 @@ When using templates to render configuration for tests, IT Runner will inject th
 
 ### Dependencies configuration
 
+See the [dependencymanager.ContainerRunConfig struct](pkg/uc/dependencymanager/container_test_types.go#L11-L24) for the allowed fields of the `container` config section.
+
 ```yaml
 dependencies:
 
