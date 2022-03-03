@@ -28,6 +28,7 @@ func (d containerProvider) SpinUpContainer(id string, inDocker bool) (*Container
 		Env:          containerSpec.Container.Env,
 		Name:         containerSpec.ID,
 		PortBindings: containerSpec.Container.PortBindings,
+		ExposedPorts: containerSpec.Container.ExposedPorts,
 		Mounts:       containerSpec.Container.Mounts,
 		Entrypoint:   containerSpec.Container.Entrypoint,
 		Cmd:          containerSpec.Container.Cmd,
