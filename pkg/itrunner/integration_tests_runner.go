@@ -41,6 +41,9 @@ func (d DefaultIntegrationTestsRunner) doExecuteTestGroup(group TestGroup) (*Tes
 
 	results := make([]VersionExecutionResult, 0)
 
+	coverProfile := group.CoverProfileFilePath
+	coverPackages := group.CoverPackages
+
 	for _, version := range group.Versions {
 
 		// Obtain info about dependencies. Dependency manager starts services when possible or retrieve the info
@@ -75,14 +78,20 @@ func (d DefaultIntegrationTestsRunner) doExecuteTestGroup(group TestGroup) (*Tes
 
 		// Execute tests
 		testExecutionResult, err := d.testRunner.RunTest(gotestrunner.GoTest{
-			Packages:          group.Packages,
-			EnvConfigFormat:   "YAML", //TODO need to be added to config... or we can try to deduce it
-			EnvConfigFilePath: generatedConfigOutput.OutputFilePath,
+			Packages:                   group.Packages,
+			EnvConfigFormat:            "YAML", //TODO need to be added to config... or we can try to deduce it
+			EnvConfigFilePath:          generatedConfigOutput.OutputFilePath,
+			CoverProfileOutputFilePath: coverProfile,
+			CoverPackages:              coverPackages,
 		})
 
 		if err != nil {
 			return nil, err
 		}
+
+		// If the test was executed successfully, unset test coverage related variables to avoid generating multiple times the same information within each test group
+		coverProfile = ""
+		coverPackages = []string{}
 
 		testResult := TestSuccess
 		if testExecutionResult.Result != gotestrunner.TestSuccess {

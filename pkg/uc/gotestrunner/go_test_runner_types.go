@@ -14,10 +14,12 @@ const (
 )
 
 type GoTest struct {
-	Packages          []string
-	EnvConfigFormat   exportedtypes.TestConfigFormat
-	EnvConfigFilePath string
-	EnvVarName        string
+	Packages                   []string
+	EnvConfigFormat            exportedtypes.TestConfigFormat
+	EnvConfigFilePath          string
+	EnvVarName                 string
+	CoverProfileOutputFilePath string
+	CoverPackages              []string
 }
 
 type GoTestResult struct {

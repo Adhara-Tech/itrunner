@@ -68,9 +68,11 @@ func Run(opts RunnerOptions) (*itrunner.SuiteExecutionResult, error) {
 
 	for _, testGroup := range config.Suite.TestGroupList {
 		currentTestGroup := itrunner.TestGroup{
-			Name:     testGroup.Name,
-			Packages: testGroup.PackageList,
-			Versions: make([]itrunner.Version, 0),
+			Name:                 testGroup.Name,
+			Packages:             testGroup.PackageList,
+			Versions:             make([]itrunner.Version, 0),
+			CoverProfileFilePath: testGroup.CoverProfileFilePath,
+			CoverPackages:        testGroup.CoverPackages,
 		}
 
 		for _, currentVersion := range testGroup.VersionList {

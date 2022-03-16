@@ -32,9 +32,11 @@ type VersionExecutionResult struct {
 }
 
 type TestGroup struct {
-	Name     string //Ex: Postgres
-	Packages []string
-	Versions []Version
+	Name                 string //Ex: Postgres
+	Packages             []string
+	Versions             []Version
+	CoverProfileFilePath string
+	CoverPackages        []string
 }
 
 type Version struct {

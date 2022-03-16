@@ -10,9 +10,11 @@ type Suite struct {
 }
 
 type TestGroup struct {
-	Name        string        `yaml:"groupName"`
-	PackageList []string      `yaml:"packages"`
-	VersionList []TestVersion `yaml:"versions"`
+	Name                 string        `yaml:"groupName"`
+	PackageList          []string      `yaml:"packages"`
+	VersionList          []TestVersion `yaml:"versions"`
+	CoverProfileFilePath string        `yaml:"coverProfileFilePath"`
+	CoverPackages        []string      `yaml:"coverPackages"`
 }
 
 type TestVersion struct {
