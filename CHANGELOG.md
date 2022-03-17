@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Generate test coverage reports (one per test group version) given by two additional configuration options:
+  - coverPackages: maps to go test `-coverpkg`.
+  - coverProfileFilePath: maps to go test `-coverprofile`.
+
 ## [0.1.2] - 2022-03-08
 
 ### Added

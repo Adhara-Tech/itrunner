@@ -86,9 +86,11 @@ func Run(opts RunnerOptions) (*itrunner.SuiteExecutionResult, error) {
 
 			}
 			version.TestConfig = itrunner.VersionTestConfig{
-				TemplatePath:  currentVersion.TestConfig.TemplatePath,
-				OutputPath:    currentVersion.TestConfig.OutputPath,
-				InputDataFrom: itrunner.ConfigInputDataFrom{Dependencies: make([]itrunner.ConfigInputDataFromDependency, 0)},
+				TemplatePath:         currentVersion.TestConfig.TemplatePath,
+				InputDataFrom:        itrunner.ConfigInputDataFrom{Dependencies: make([]itrunner.ConfigInputDataFromDependency, 0)},
+				OutputPath:           currentVersion.TestConfig.OutputPath,
+				CoverProfileFilePath: currentVersion.TestConfig.CoverProfileFilePath,
+				CoverPackages:        currentVersion.TestConfig.CoverPackages,
 			}
 
 			for _, currentDependency := range currentVersion.TestConfig.InputDataFrom.ContainerTestConfigList {

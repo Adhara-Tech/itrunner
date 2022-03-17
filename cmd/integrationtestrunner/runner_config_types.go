@@ -27,9 +27,11 @@ type TestDependency struct {
 }
 
 type TestConfig struct {
-	TemplatePath  string                  `yaml:"templatePath"`
-	InputDataFrom TestConfigInputDataFrom `yaml:"inputDataFrom"`
-	OutputPath    string                  `yaml:"outputPath"`
+	TemplatePath         string                  `yaml:"templatePath"`
+	InputDataFrom        TestConfigInputDataFrom `yaml:"inputDataFrom"`
+	OutputPath           string                  `yaml:"outputPath"`
+	CoverProfileFilePath string                  `yaml:"coverProfileFilePath"`
+	CoverPackages        []string                `yaml:"coverPackages"`
 }
 
 type TestConfigInputDataFrom struct {

@@ -46,9 +46,11 @@ type Version struct {
 }
 
 type VersionTestConfig struct {
-	TemplatePath  string              `yaml:"templatePath"`
-	InputDataFrom ConfigInputDataFrom `yaml:"inputDataFrom"`
-	OutputPath    string              `yaml:"outputPath"`
+	TemplatePath         string              `yaml:"templatePath"`
+	InputDataFrom        ConfigInputDataFrom `yaml:"inputDataFrom"`
+	OutputPath           string              `yaml:"outputPath"`
+	CoverProfileFilePath string              `yaml:"coverProfileFilePath"`
+	CoverPackages        []string            `yaml:"coverPackages"`
 }
 
 type ConfigInputDataFrom struct {

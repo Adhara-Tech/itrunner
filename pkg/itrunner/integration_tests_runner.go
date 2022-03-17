@@ -75,9 +75,11 @@ func (d DefaultIntegrationTestsRunner) doExecuteTestGroup(group TestGroup) (*Tes
 
 		// Execute tests
 		testExecutionResult, err := d.testRunner.RunTest(gotestrunner.GoTest{
-			Packages:          group.Packages,
-			EnvConfigFormat:   "YAML", //TODO need to be added to config... or we can try to deduce it
-			EnvConfigFilePath: generatedConfigOutput.OutputFilePath,
+			Packages:                   group.Packages,
+			EnvConfigFormat:            "YAML", //TODO need to be added to config... or we can try to deduce it
+			EnvConfigFilePath:          generatedConfigOutput.OutputFilePath,
+			CoverProfileOutputFilePath: version.TestConfig.CoverProfileFilePath,
+			CoverPackages:              version.TestConfig.CoverPackages,
 		})
 
 		if err != nil {
