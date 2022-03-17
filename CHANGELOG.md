@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] - 2022-03-17
+
 ### Added
 
 - Generate test coverage reports (one per test group version) given by two additional configuration options:
