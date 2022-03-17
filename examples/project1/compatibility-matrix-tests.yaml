@@ -1,9 +1,6 @@
 suite:
   testGroups:
     - groupName: postgres
-      coverProfileFilePath: ./_artifacts/report.coverage.out
-      coverPackages:
-        - github.com/Adhara-Tech/project1-example/pkg/...
       packages:
         - ./test/integration/db/...
       versions:
@@ -23,6 +20,9 @@ suite:
 
               as: fileConfig
             outputPath: ./tmp-configs/databases/postgres_config.yml
+            coverProfileFilePath: ./_artifacts/report_14.1.coverage.out
+            coverPackages:
+              - github.com/Adhara-Tech/project1-example/pkg/...
         - versionName: 13.5
           env:
             - CONFIG=./tmp-configs/databases/postgres_config.yml

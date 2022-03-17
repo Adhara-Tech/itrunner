@@ -10,11 +10,9 @@ type Suite struct {
 }
 
 type TestGroup struct {
-	Name                 string        `yaml:"groupName"`
-	PackageList          []string      `yaml:"packages"`
-	VersionList          []TestVersion `yaml:"versions"`
-	CoverProfileFilePath string        `yaml:"coverProfileFilePath"`
-	CoverPackages        []string      `yaml:"coverPackages"`
+	Name        string        `yaml:"groupName"`
+	PackageList []string      `yaml:"packages"`
+	VersionList []TestVersion `yaml:"versions"`
 }
 
 type TestVersion struct {
@@ -29,9 +27,11 @@ type TestDependency struct {
 }
 
 type TestConfig struct {
-	TemplatePath  string                  `yaml:"templatePath"`
-	InputDataFrom TestConfigInputDataFrom `yaml:"inputDataFrom"`
-	OutputPath    string                  `yaml:"outputPath"`
+	TemplatePath         string                  `yaml:"templatePath"`
+	InputDataFrom        TestConfigInputDataFrom `yaml:"inputDataFrom"`
+	OutputPath           string                  `yaml:"outputPath"`
+	CoverProfileFilePath string                  `yaml:"coverProfileFilePath"`
+	CoverPackages        []string                `yaml:"coverPackages"`
 }
 
 type TestConfigInputDataFrom struct {
