@@ -7,7 +7,6 @@ import (
 	"github.com/Adhara-Tech/itrunner/cmd/exportedtypes"
 	"github.com/Adhara-Tech/itrunner/pkg/uc/dependencymanager"
 	"io/ioutil"
-	"time"
 )
 
 type TestRunner interface {
@@ -40,8 +39,6 @@ func (d DefaultTestRunner) RunTest(test GoTest) (*GoTestResult, error) {
 	envVar := fmt.Sprintf("%s=%s", exportedtypes.TestRunnerConfEnvVarName, base64EnvData)
 
 	fmt.Println(envVar)
-
-	time.Sleep(5 * time.Second)
 
 	args := make([]string, 0)
 	// TODO gotestsum must be an option
