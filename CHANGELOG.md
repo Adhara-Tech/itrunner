@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Support additional arguments on the go test command. These are configured by an `extraArgs` field at the test group version level.
+
 ## [0.1.3] - 2022-03-17
 
 ### Added
