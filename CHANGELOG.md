@@ -9,11 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `coverProfileFilePath` and `coverPackages` options have been removed, they must be replaced with entries in the `extraArgs` field. Example:
-```
-extraArgs:
-   - "-coverpkg=github.com/your/module/..."
-   - "-coverprofile=./coverage.out"
-```
+   ```
+   extraArgs:
+      - "-coverpkg=github.com/your/module/..."
+      - "-coverprofile=./coverage.out"
+   ```
 
 ## [0.1.3] - 2022-03-17
 
