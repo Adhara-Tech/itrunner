@@ -6,9 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Changed
 
-- Support additional arguments on the go test command. These are configured by an `extraArgs` field at the test group version level.
+- `coverProfileFilePath` and `coverPackages` options have been removed, they must be replaced with entries in the `extraArgs` field. Example:
+```
+extraArgs:
+   - "-coverpkg=github.com/your/module/..."
+   - "-coverprofile=./coverage.out"
+```
 
 ## [0.1.3] - 2022-03-17
 
