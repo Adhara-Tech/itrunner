@@ -40,23 +40,10 @@ func (d DefaultTestRunner) RunTest(test GoTest) (*GoTestResult, error) {
 
 	fmt.Println(envVar)
 
-	coverPackagesCommaSeparated := ""
-	for i, pkg := range test.CoverPackages {
-		if i == 0 {
-			coverPackagesCommaSeparated += pkg
-		} else {
-			coverPackagesCommaSeparated += "," + pkg
-		}
-	}
-
-	coverPkg := fmt.Sprintf("-coverpkg=%s", coverPackagesCommaSeparated)
-	coverProfile := fmt.Sprintf("-coverprofile=%s", test.CoverProfileOutputFilePath)
-
 	args := make([]string, 0)
 	// TODO gotestsum must be an option
 	args = append(args, "test")
-	args = append(args, coverPkg)
-	args = append(args, coverProfile)
+	args = append(args, test.ExtraArgs...)
 	args = append(args, test.Packages...)
 	exitCode, err := Command("go", []string{envVar}, args...).ExecuteWithLog()
 	testResult := TestSuccess
