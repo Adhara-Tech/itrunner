@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       - "-coverpkg=github.com/your/module/..."
       - "-coverprofile=./coverage.out"
    ```
+  
+### Breaking Changes
+- `DependencyInfo` now exposes `Ports`, to be used in templates specifying the key ('<port>/<protocol>') as the index of Port you wish - e.g. `port: {{ index .Postgres.Ports "5432/tcp" }}`
 
 ## [0.1.3] - 2022-03-17
 
