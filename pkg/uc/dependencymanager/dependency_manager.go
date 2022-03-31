@@ -18,9 +18,8 @@ type DependencyManager interface {
 }
 
 type DependencyInfo struct {
-	Host string
-	//TODO we may need multiport in the future
-	Port int
+	Host  string
+	Ports map[string]int
 }
 
 var _ DependencyManager = (*DefaultDependencyManager)(nil)
@@ -93,14 +92,19 @@ func (d DefaultDependencyManager) GetDependencyInfo(dependencyID string) (*Depen
 	}
 	firstPort := portNames[0]
 
-	port, err := container.GetPortAsInt(firstPort)
-	if err != nil {
-		return nil, err
+	ports := make(map[string]int)
+
+	for _, portName := range portNames {
+		port, err := container.GetPortAsInt(portName)
+		if err != nil {
+			return nil, err
+		}
+		ports[portName] = port
 	}
 
 	dependencyInfo := DependencyInfo{
-		Host: container.GetIP(firstPort),
-		Port: port,
+		Host:  container.GetIP(firstPort),
+		Ports: ports,
 	}
 
 	fmt.Printf("%+v\n", dependencyInfo)

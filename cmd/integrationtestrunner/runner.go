@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 
 	"github.com/Adhara-Tech/itrunner/pkg/uc/dependencymanager"
 
@@ -115,6 +116,12 @@ func Run(opts RunnerOptions) (*itrunner.SuiteExecutionResult, error) {
 	// TODO extract to factory function?
 	var resultsWriter io.Writer
 	if opts.OutputFile != "" {
+		directory := filepath.Dir(opts.OutputFile)
+
+		if err = os.MkdirAll(directory, 0777); err != nil {
+			return result, err
+		}
+
 		resultsWriter, err = os.Create(opts.OutputFile)
 		if err != nil {
 			return result, err
