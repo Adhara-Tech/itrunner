@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.5] - 2023-02-27
+
+### Added
+
+- Injection of container registry credentials. They are included as an optional parameter `dockerauth` in `container` [dependency config](https://github.com/Adhara-Tech/itrunner#dependencies-configuration) section.
+
 ## [0.1.4] - 2022-04-11
 
 ### Added

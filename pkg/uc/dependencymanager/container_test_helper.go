@@ -97,6 +97,7 @@ func (containersPool *ContainersPool) Run(config ContainerRunConfig, dockerInDoc
 		ExtraHosts:   config.ExtraHosts,
 		Labels:       config.Labels,
 		PortBindings: config.PortBindings,
+		Auth:         config.Auth,
 	}
 
 	resource, err := containersPool.pool.RunWithOptions(runOptions)

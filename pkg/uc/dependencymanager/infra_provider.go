@@ -34,6 +34,7 @@ func (d containerProvider) SpinUpContainer(id string, inDocker bool) (*Container
 		Cmd:          containerSpec.Container.Cmd,
 		ExtraHosts:   containerSpec.Container.ExtraHosts,
 		Labels:       containerSpec.Container.Labels,
+		Auth:         containerSpec.Container.Auth,
 	}
 	container, err := d.containersPool.Run(config, inDocker, func(container *Container) error {
 		return nil
