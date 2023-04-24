@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.6] - 2023-04-24
+
+### Fixed
+
+- No Changes, sum.golang.org hash is broken on 0.1.5
+
 ## [0.1.5] - 2023-02-27
 
 ### Added
