@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -34,14 +33,14 @@ type RunnerOptions struct {
 
 func Run(opts RunnerOptions) (*itrunner.SuiteExecutionResult, error) {
 
-	configDataBytes, err := ioutil.ReadFile(opts.CompatibilityMatrixConfigFilePath)
+	configDataBytes, err := os.ReadFile(opts.CompatibilityMatrixConfigFilePath)
 	if err != nil {
 		return nil, err
 	}
+	replacedConfigDataBytes := os.ExpandEnv(string(configDataBytes))
 
 	var config CompatibilityMatrixTestConfig
-
-	err = yaml.Unmarshal(configDataBytes, &config)
+	err = yaml.Unmarshal([]byte(replacedConfigDataBytes), &config)
 	if err != nil {
 		return nil, err
 	}

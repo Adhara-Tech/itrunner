@@ -2,7 +2,7 @@ package dependencymanager
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 
 	"gopkg.in/yaml.v3"
 )
@@ -34,14 +34,15 @@ func NewDefaultDependencyManager(opts DependencyManagerOptions) (*DefaultDepende
 	// Reads the config file and store the info in a private field
 	// Inits the container provider
 
-	configDataBytes, err := ioutil.ReadFile(opts.DependenciesFilePath)
+	configDataBytes, err := os.ReadFile(opts.DependenciesFilePath)
 	if err != nil {
 		return nil, err
 	}
+	replacedConfigDataBytes := os.ExpandEnv(string(configDataBytes))
 
 	var dependencies DependencyCollection
 
-	err = yaml.Unmarshal(configDataBytes, &dependencies)
+	err = yaml.Unmarshal([]byte(replacedConfigDataBytes), &dependencies)
 	if err != nil {
 		return nil, err
 	}
