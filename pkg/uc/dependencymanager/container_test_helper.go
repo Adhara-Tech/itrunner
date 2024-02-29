@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/ory/dockertest"
+	"github.com/ory/dockertest/docker"
 )
 
 type ContainersPool struct {
@@ -100,7 +101,10 @@ func (containersPool *ContainersPool) Run(config ContainerRunConfig, dockerInDoc
 		Auth:         config.Auth,
 	}
 
-	resource, err := containersPool.pool.RunWithOptions(runOptions)
+	resource, err := containersPool.pool.RunWithOptions(runOptions, func(config *docker.HostConfig) {
+		config.AutoRemove = true
+	})
+
 	if err != nil {
 		return nil, fmt.Errorf("Running container with options: %w", err)
 	}
